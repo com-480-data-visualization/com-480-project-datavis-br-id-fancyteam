@@ -32,6 +32,7 @@ Pre-processing of the data set you chose:
 
 ## Related work
 
+- Une question a été traitée avec ce dataset : The type of a pokemon cannot be inferred only by it's Attack and Deffence. Le set propose It would be worthy to find which two variables can define the type of a pokemon, if any. 
 
 - What others have already done with the data?
 - Why is your approach original?
