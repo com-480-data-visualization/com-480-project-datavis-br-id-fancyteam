@@ -1,11 +1,5 @@
 # Milestone 1 (Friday 3rd April, 5pm)
-
 **10% of the final grade**
-
-This is a preliminary milestone to let you set up goals for your final project and assess the feasibility of your ideas.
-Please, fill the following sections about your project.
-
-*(max. 2000 characters per section)*
 
 ## Dataset
 
@@ -26,9 +20,21 @@ Frame the general topic of your visualization and the main axis that you want to
 
 ## Exploratory Data Analysis
 
-Pre-processing of the data set you chose:
+We are going to load the data in a `pandas` dataframe and do a quick analysis of the file. As a reminder, the data was extracted from https://www.kaggle.com/abcsds/pokemon (last update: 2020.03.26).
 
-- Show some basic statistics and get insights about the data
+We notice 13 columns. The first column is the Pokemon's `ID`, the second their `Name`. We then have the `Type`s (Pokemon can have one or two types), and then some statistics. For the statistics, the column `Total` is the sum of all numbered statistics, namely all of the numbers beside the generation number and the legendary status. Next are all the basic statistics for one Pokemon, like `Attack`, `Special Defense` or `Speed`. Finally, we have the Pokemon's `Generation` number (i.e. their "season") and a `Legendary` status.
+
+For the name, as stated before, there's a catch. We have 721 unique Pokemon `ID` and yet have 800 `Name`s. Turns out, some Pokemon have multiple form. For instance, [`Charizard` has four forms](https://bulbapedia.bulbagarden.net/wiki/Charizard_(Pok%C3%A9mon)). We will have to take that into account when showing these Pokemon!
+
+About the types, **TODO**.
+
+Now let's dive in the statistics. **TODO**.
+
+For the `Generation`, the numbers are by default wrong, because we have to take into account the multiple Pokemon evolutions, as stated before. The database does not state when a new form for a Pokemon was added. This shall be fixed by us if time permits. However, after removing the non-unique values, the numbers match with [our ground truth](https://en.wikipedia.org/wiki/List_of_Pok%C3%A9mon#Detailed_lists_by_generation).
+
+Finally, we have 65 Legendary Pokemon for 735 Common Pokemon. We have to take into account the fact that in this database Legendary is used to denote both [Legendary](https://bulbapedia.bulbagarden.net/wiki/Legendary_Pok%C3%A9mon) and [Mythical](https://bulbapedia.bulbagarden.net/wiki/Mythical_Pok%C3%A9mon) Pokemon. Additionnal work may be done to separate them.
+
+You can find the complete analysis in the [dedicated notebook](./notebooks/Data analysis and statistics.ipynb).
 
 ## Related work
 
