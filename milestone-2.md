@@ -26,7 +26,7 @@ Next, we want to show the links between different Pokémon and their different e
 Finally, we have the idea of being able to make a "selection" of Pokémon, just like online shopping sites that allow you to compare products. The user, via Ctrl+Click, will be able to compare different Pokémon with each other, effectively allowing roosters to be made for future games.
 
 ## Tools needed
-Among the tools that we are going to realize, we are going to search particularly on the side of [D3.js](https://d3js.org/), which will allow us to exploit the data efficiently and with nice animations. Concerning the infrastructure of the site itself, we will use [Bootstrap](https://getbootstrap.com/) and [Font Awesome](fontawesome.com/), two very interesting APIs to make beautiful sites quickly.
+Among the tools that we are going to realize, we are going to search particularly on the side of [D3.js](https://d3js.org/), which will allow us to exploit the data efficiently and with nice animations. Concerning the infrastructure of the site itself, we will use [Bootstrap](https://getbootstrap.com/) and [Font Awesome](http://fontawesome.com/), two very interesting APIs to make beautiful sites quickly.
 
 ## Functional project
 You can find the functional project mockup [here](./www/milestone-2/).
