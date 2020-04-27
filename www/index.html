@@ -1,29 +1,70 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>Hello, world!</title>
-    </head>
-    <body>
-        <h1>Hello, world!</h1>
+	<title>Welcome to Data Visualization</title>
+	<meta name="description" content="Welcome to Data Visualization">
+	<meta name="author" content="K Lis">
 
-        <!-- D3.js -->
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        
-            <script>
-        d3.select("h1").style("color", "green");
-    </script>
-    </body>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+	<ul class="width-limited">
+		<li><a href="index.html">Home</a></li>
+		<li><a href="description.html">Pokemon vizualization</a></li>
+		<li><a href="data.html">Data</a></li>
+		<li><a href="team.html">Team</a></li>
+	</ul>
+</nav>
+
+<header class="title-row">
+	<h1> My Visualization Project </h1>
+</header>
+
+<main class="width-limited">
+	<h4>Introduction</h4>
+	<p>
+	This visualization unveils the deepest mysteries of our world,
+	showing the facts through the lens of statistical data anlysis
+	and colorful animations.
+	The truth shines brightly and guides the lost minds.
+	</p>
+	<p>
+	We investigate the changes in population of alligators in Lac Léman
+	over the last century and extrapolate the trend to predict
+	a world of reptile domination.
+	Read more <a href="description.html">about our model</a>
+	or the <a href="data.html">sources of our data</a>.
+	</p>
+
+	<div class="rounded">
+		<h4>How to use</h4>
+		<p>
+		Here we would tell you how to interact with the plot below.
+		Sadly, it is not interactive at this stage of the project.
+		Please imagine that the plot is interactive and that clicking on it
+		activates captivating animations.
+		</p>
+	</div>
+</main>
+
+<figure class="viz-row">
+	<h4>Some examples here</h4>
+	<embed class="width-limited" src="viz_plot.svg" />
+</figure>
+
+<div class="width-limited">
+	<h4>Credits</h4>
+	<p>Meet <a href="./team.html">the authors here</a>. The project was created for the <a href="http://edu.epfl.ch/coursebook/en/data-visualization-COM-480">Data Visualization</a> course at EPFL.
+</div>
+
+<footer></footer>
+
+</body>
 </html>
