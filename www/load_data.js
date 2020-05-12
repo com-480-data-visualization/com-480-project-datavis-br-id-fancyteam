@@ -1,8 +1,8 @@
-var url = 'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/data/pokemon001-721.csv'
+var url = 'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/www/data/pokemon001-721.csv'
 
 d3.csv(url).then(function(data) {
-    const columns = [ '#','Name','Type 1','Type 2','Total','HP',
-                      'Attack','Defense','Sp. Atk','Sp. Def','Speed',
+    const columns = [ 'Id','Name','Type_1','Type_2','Total','HP',
+                      'Attack','Defense','Sp_Atk','Sp_Def','Speed',
                       'Generation','Legendary']
     tabulate(data,columns)
   });
