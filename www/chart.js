@@ -165,7 +165,7 @@ class Chart {
 
     var points = d3.range(this.data.length).map(i => {
       return [parseFloat(this.data[i].Attack),
-      parseFloat(this.data[i].Defense), this.data[i].Type_1]});
+      parseFloat(this.data[i].Defense), this.data[i].Type_1, this.data[i].Name]});
 
     var typeToColor = new Map([
       ["Bug", d3.rgb(168, 184, 32)],
@@ -199,7 +199,8 @@ class Chart {
         if (typeToColor.get(d[2])) return typeToColor.get(d[2]);
         return typeToColor.get("???");
       })
-      .attr("transform", "translate(70, 30)");
+      .attr("transform", "translate(70, 30)")
+      .on("click", d => console.log(d[3]));
 
     function brushended() {
       var s = d3.event.selection;
