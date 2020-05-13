@@ -168,9 +168,25 @@ class Chart {
       parseFloat(this.data[i].Defense), this.data[i].Type_1]});
 
     var typeToColor = new Map([
-      ["Fire", d3.rgb(255, 0, 0)],
-      ["Grass", d3.rgb(0, 255, 0)],
-      ["Water", d3.rgb(0, 0, 255)]
+      ["Bug", d3.rgb(168, 184, 32)],
+      ["Dark", d3.rgb(112, 88, 72)],
+      ["Dragon", d3.rgb(112, 56, 248)],
+      ["Electric", d3.rgb(248, 208, 48)],
+      ["Fairy", d3.rgb(238, 153, 172)],
+      ["Fighting", d3.rgb(192, 48, 40)],
+      ["Fire", d3.rgb(240, 128, 48)],
+      ["Flying", d3.rgb(168, 144, 240)],
+      ["Ghost", d3.rgb(112, 88, 152)],
+      ["Grass", d3.rgb(120, 200, 80)],
+      ["Ground", d3.rgb(224, 192, 104)],
+      ["Ice", d3.rgb(152, 216, 216)],
+      ["Normal", d3.rgb(168, 168, 120)],
+      ["Poison", d3.rgb(160, 64, 160)],
+      ["Psychic", d3.rgb(248, 88, 136)],
+      ["Rock", d3.rgb(184, 160, 56)],
+      ["Steel", d3.rgb(184, 184, 208)],
+      ["Water", d3.rgb(104, 144, 240)],
+      ["???", d3.rgb(104, 160, 144)]
     ]);
 
     main.selectAll("circle")
@@ -179,7 +195,10 @@ class Chart {
       .attr("cx", d => x(d[0]))
       .attr("cy", d => y(d[1]))
       .attr("r", 3)
-      .attr("fill", d => typeToColor.get(d[2]))
+      .attr("fill", d => {
+        if (typeToColor.get(d[2])) return typeToColor.get(d[2]);
+        return typeToColor.get("???");
+      })
       .attr("transform", "translate(70, 30)");
 
     function brushended() {
