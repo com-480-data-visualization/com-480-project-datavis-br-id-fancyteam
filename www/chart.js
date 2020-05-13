@@ -226,7 +226,7 @@ class Chart {
       svg.selectAll("circle").transition(t)
           .attr("cx", d => x(d[0]))
           .attr("cy", d => y(d[1]))
-          .attr("r", 2 + (x(1)-x(0)) * (x(1)-x(0))/500);
+          .attr("r", 2 + (x(1)-x(0)) * (x(1)-x(0))/200);
     }
   }
 }
