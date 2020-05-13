@@ -145,7 +145,7 @@ class Chart {
 
     // Add brushing
     var brush = d3.brush()
-      .extent([[0, 0],[this.width, this.height]])
+      .extent([[70, 30],[this.width + 70, this.height + 30]])
       .on("end", brushended),
       idleTimeout,
       idleDelay = 350;
@@ -194,7 +194,7 @@ class Chart {
     .enter().append("circle")
       .attr("cx", d => x(d[0]))
       .attr("cy", d => y(d[1]))
-      .attr("r", 3)
+      .attr("r", 2 + (x(1)-x(0)) * (x(1)-x(0))/200)
       .attr("fill", d => {
         if (typeToColor.get(d[2])) return typeToColor.get(d[2]);
         return typeToColor.get("???");
@@ -224,8 +224,9 @@ class Chart {
       svg.select(".x_axis").transition(t).call(xAxis);
       svg.select(".y_axis").transition(t).call(yAxis);
       svg.selectAll("circle").transition(t)
-          .attr("cx", function(d) { return x(d[0]); })
-          .attr("cy", function(d) { return y(d[1]); });
+          .attr("cx", d => x(d[0]))
+          .attr("cy", d => y(d[1]))
+          .attr("r", 2 + (x(1)-x(0)) * (x(1)-x(0))/500);
     }
   }
 }
