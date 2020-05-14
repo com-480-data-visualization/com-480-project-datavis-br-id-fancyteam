@@ -1,30 +1,4 @@
-const margin = {
-    top: 40,
-    right: 40,
-    bottom: 40,
-    left: 40
-  },
-
-width = window.innerWidth * 0.70;
-height = window.innerHeight * 0.60;
-
-var url = 'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/www/data/pokemon001-721.csv'
-
-d3.csv(url).then(function(data) {
-  createChart(data)
-});
-
-function createChart(data) {
-  const svg = d3.select("#chart-container").append("svg")
-    .attr("x", margin.left)
-    .attr("y", margin.top)
-    .attr("width", (width + margin.left + margin.right))
-    .attr("height", (height + margin.top + margin.bottom));
-
-  let pokemons = [];
-  data.forEach(pokemon => pokemons.push(pokemon));
-  let pokemonCount = pokemons.length;
-
+function createChart(x_field, y_field) {
   // Get max and min attack bounds for X-scale and defense bounds for Y-scale.
   let maxXPoint = 0;
   let minXPoint = 1000;
@@ -33,7 +7,7 @@ function createChart(data) {
 
   pokemons.forEach(pokemon => {
     for (let field in pokemon) {
-      if (pokemon.hasOwnProperty(field) && field == "Attack") {
+      if (pokemon.hasOwnProperty(field) && field == x_field) {
         value = parseFloat(pokemon[field]);
         if (value > maxXPoint) {
           maxXPoint = value;
@@ -42,7 +16,7 @@ function createChart(data) {
           minXPoint = value;
         }
       }
-      if (pokemon.hasOwnProperty(field) && field == "Defense") {
+      if (pokemon.hasOwnProperty(field) && field == y_field) {
         value = parseFloat(pokemon[field]);
         if (value > maxYPoint) {
           maxYPoint = value;
@@ -60,181 +34,128 @@ function createChart(data) {
 
   let chart = new Chart({
     data: pokemons,
-    width: width,
-    height: height,
+    width: plot_width + plot_margin.left + plot_margin.right,
+    height: plot_height + plot_margin.top + plot_margin.bottom,
+    plot_width: plot_width,
+    plot_height: plot_height,
     maxX: maxXPoint,
     minX: minXPoint,
     maxY: maxYPoint,
     minY: minYPoint,
-    svg: svg,
-    name: "Pokemon chart",
-    margin: margin,
-    showBottomAxis: true
   });
-}
 
-class Chart {
-  constructor(options) {
-    this.data = options.data;
-    this.width = options.width;
-    this.height = options.height;
-    this.maxX = options.maxX;
-    this.minX = options.minX;
-    this.maxY = options.maxY;
-    this.minY = options.minY;
-    var svg = options.svg;
-    this.name = options.name;
-    this.margin = options.margin;
-    this.showBottomAxis = options.showBottomAxis;
+  let svg = d3.select("#chart-container").append("svg")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", chart.width)
+    .attr("height", chart.height);
 
-    var x0 = [this.minX, this.maxX],
-        y0 = [this.minY, this.maxY],
-        x = d3.scaleLinear().domain(x0).range([0, this.width]),
-        y = d3.scaleLinear().domain(y0).range([this.height, 0]);
+  var xAxis = d3.axisBottom(chart.x).ticks(plot_width/40);
+  svg.append("g")
+    .attr("class", "x_axis")
+    .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
+    .call(xAxis);
+  svg.append("text")
+    .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) +
+      " ," + (chart.height - 5) +")")
+    .style("text-anchor", "middle")
+    .text("Attack");
 
-    // Add the chart to the HTML page
-    svg.append("g")
-      .attr('class', this.name.toLowerCase())
-      .attr("transform", "translate(70, 30)");
-    svg.append("text")
-      .attr("class", "chart-title")
-      .attr("transform", "translate(" + (70 + this.width / 2) + ", 20)")
-      .style("text-anchor", "middle")
-      .text(this.name);
+  var xAxisTop = d3.axisTop(chart.x).tickValues([]);
+  svg.append("g")
+    .attr("class", "x_axis")
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .call(xAxisTop);
 
-    var xAxis = d3.axisBottom(x).ticks(this.width/40);
-    svg.append("g")
-      .attr("class", "x_axis")
-      .attr("transform", "translate(70," + (30 + this.height) + ")")
-      .call(xAxis);
-    svg.append("text")
-      .attr("transform", "translate(" + (70 + this.width / 2) + " ," + (30 + this.height + margin.bottom - 5) +")")
-      .style("text-anchor", "middle")
-      .text("Attack");
+  var yAxis = d3.axisLeft(chart.y).ticks(plot_height/20);
+  svg.append("g")
+    .attr("class", "y_axis")
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .call(yAxis);
+  svg.append("text")
+    .attr("transform", "translate(" + (plot_margin.left - 40) +
+      " ," + (plot_margin.top + plot_height / 2) +") rotate(-90)")
+    .style("text-anchor", "middle")
+    .text("Defense");
 
-    var xAxisTop = d3.axisTop(x).tickValues([]);
-    svg.append("g")
-      .attr("class", "x_axis")
-      .attr("transform", "translate(70, 30)")
-      .call(xAxisTop);
+  var yAxisRight = d3.axisRight(chart.y).tickValues([]);
+  svg.append("g")
+    .attr("class", "y_axis")
+    .attr("transform", "translate(" + (plot_margin.left + plot_width) + "," + plot_margin.top + ")")
+    .call(yAxisRight);
 
-    var yAxis = d3.axisLeft(y).ticks(this.height/20);
-    svg.append("g")
-      .attr("class", "y_axis")
-      .attr("transform", "translate(70, 30)")
-      .call(yAxis);
+  // Add a clipPath: everything out of this area won't be drawn.
+  var clip = svg.append("defs").append("svg:clipPath")
+      .attr("id", "clip")
+      .append("svg:rect")
+      .attr("width", plot_width)
+      .attr("height", plot_height)
+      .attr("x", plot_margin.left)
+      .attr("y", plot_margin.top);
 
-    var yAxisRight = d3.axisRight(y).tickValues([]);
-    svg.append("g")
-      .attr("class", "y_axis")
-      .attr("transform", "translate(" + (70 + this.width) + ", 30)")
-      .call(yAxisRight);
-    svg.append("text")
-      .attr("transform", "translate(" + (70 + 5 - margin.left) + " ," + (30 + this.height / 2) +") rotate(-90)")
-      .style("text-anchor", "middle")
-      .text("Defense");
+  // Add brushing
+  var brush = d3.brush()
+    .extent([[plot_margin.left, plot_margin.top],
+      [plot_margin.left + plot_width, plot_margin.top + plot_height]])
+    .on("end", brushended),
+    idleTimeout,
+    idleDelay = 350;;
 
-    // Add a clipPath: everything out of this area won't be drawn.
-    var clip = svg.append("defs").append("svg:clipPath")
-        .attr("id", "clip")
-        .append("svg:rect")
-        .attr("width", x(x0[1]))
-        .attr("height", y(y0[0]))
-        .attr("x", x(x0[0]) + 70)
-        .attr("y", 30);
+  svg.append("g")
+    .attr("class", "brush")
+    .call(brush)
 
-    // Add brushing
-    var brush = d3.brush()
-      .extent([[70, 30],[this.width + 70, this.height + 30]])
-      .on("end", brushended),
-      idleTimeout,
-      idleDelay = 350;
+  svg.append("text")
+    .attr("class", "instructions")
+    .attr("transform", "translate(" + plot_margin.left + "," + (chart.height - 5) + ")")
+    .text('Click and drag above to zoom, double click to reset view');
 
-    svg.append("g")
-      .attr("class", "brush")
-      .call(brush)
+  const main = svg.append('g')
+      .attr('class', 'main')
+      .attr('clip-path', 'url(#clip)');
 
-    svg.append("text")
-      .attr("class", "instructions")
-      .attr("transform", "translate(70," + (height + 30 + 40) + ")")
-      .text('Click and drag above to zoom, double click to reset view');
+  var points = d3.range(chart.data.length).map(i => {
+    return [parseFloat(chart.data[i].Attack),
+    parseFloat(chart.data[i].Defense), chart.data[i].Type_1, chart.data[i].Name]});
 
-    const main = svg.append('g')
-      	.attr('class', 'main')
-      	.attr('clip-path', 'url(#clip)');
+  main.selectAll("circle")
+  .data(points)
+  .enter().append("circle")
+    .attr("cx", d => chart.x(d[0]))
+    .attr("cy", d => chart.y(d[1]))
+    .attr("r", plot_width/500)
+    .attr("fill", d => {
+      if (typeToColor.get(d[2])) return typeToColor.get(d[2]);
+      return typeToColor.get("???");
+    })
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .on("click", d => console.log(d[3]));
 
-    var points = d3.range(this.data.length).map(i => {
-      return [parseFloat(this.data[i].Attack),
-      parseFloat(this.data[i].Defense), this.data[i].Type_1, this.data[i].Name]});
-
-    var typeToColor = new Map([
-      ["Bug", d3.rgb(168, 184, 32)],
-      ["Dark", d3.rgb(112, 88, 72)],
-      ["Dragon", d3.rgb(112, 56, 248)],
-      ["Electric", d3.rgb(248, 208, 48)],
-      ["Fairy", d3.rgb(238, 153, 172)],
-      ["Fighting", d3.rgb(192, 48, 40)],
-      ["Fire", d3.rgb(240, 128, 48)],
-      ["Flying", d3.rgb(168, 144, 240)],
-      ["Ghost", d3.rgb(112, 88, 152)],
-      ["Grass", d3.rgb(120, 200, 80)],
-      ["Ground", d3.rgb(224, 192, 104)],
-      ["Ice", d3.rgb(152, 216, 216)],
-      ["Normal", d3.rgb(168, 168, 120)],
-      ["Poison", d3.rgb(160, 64, 160)],
-      ["Psychic", d3.rgb(248, 88, 136)],
-      ["Rock", d3.rgb(184, 160, 56)],
-      ["Steel", d3.rgb(184, 184, 208)],
-      ["Water", d3.rgb(104, 144, 240)],
-      ["???", d3.rgb(104, 160, 144)]
-    ]);
-
-    main.selectAll("circle")
-    .data(points)
-    .enter().append("circle")
-      .attr("cx", d => x(d[0]))
-      .attr("cy", d => y(d[1]))
-      .attr("r", 2 + (x(1)-x(0)) * (x(1)-x(0))/200)
-      .attr("fill", d => {
-        if (typeToColor.get(d[2])) return typeToColor.get(d[2]);
-        return typeToColor.get("???");
-      })
-      .attr("transform", "translate(70, 30)")
-      .on("click", d => console.log(d[3]));
-
-    function brushended() {
-      var s = d3.event.selection;
-      if (!s) {
-        if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
-        x.domain(x0);
-        y.domain(y0);
-      } else {
-        x.domain([s[0][0], s[1][0]].map(x.invert, x));
-        y.domain([s[1][1], s[0][1]].map(y.invert, y));
-        svg.select(".brush").call(brush.move, null)
-      }
-      zoom();
+  function brushended() {
+    var s = d3.event.selection;
+    if (!s) {
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+      chart.x.domain(chart.x0);
+      chart.y.domain(chart.y0);
+    } else {
+      chart.x.domain([s[0][0] - plot_margin.left, s[1][0] - plot_margin.left].map(chart.x.invert, chart.x));
+      chart.y.domain([s[1][1] - plot_margin.top, s[0][1] - plot_margin.top].map(chart.y.invert, chart.y));
+      svg.select(".brush").call(brush.move, null)
     }
-
-    function idled() {
-      idleTimeout = null;
-    }
-
-    function zoom() {
-      var t = svg.transition().duration(750);
-      svg.select(".x_axis").transition(t).call(xAxis);
-      svg.select(".y_axis").transition(t).call(yAxis);
-      svg.selectAll("circle").transition(t)
-          .attr("cx", d => x(d[0]))
-          .attr("cy", d => y(d[1]))
-          .attr("r", 2 + (x(1)-x(0)) * (x(1)-x(0))/200);
-    }
+    zoom();
   }
-}
 
-Chart.prototype.showOnly = function(b) {
-  this.xScale.domain(b);
-  this.chartContainer.select("path").data([this.chartData]).attr("d", this.area);
-  this.chartContainer.select(".x.axis.top").call(this.xAxisTop);
-  this.chartContainer.select(".x.axis.bottom").call(this.xAxisBottom);
+  function idled() {
+    idleTimeout = null;
+  }
+
+  function zoom() {
+    var t = svg.transition().duration(750);
+    svg.select(".x_axis").transition(t).call(xAxis);
+    svg.select(".y_axis").transition(t).call(yAxis);
+    svg.selectAll("circle").transition(t)
+        .attr("cx", d => chart.x(d[0]))
+        .attr("cy", d => chart.y(d[1]))
+        .attr("r", plot_width/500);
+  }
 }
