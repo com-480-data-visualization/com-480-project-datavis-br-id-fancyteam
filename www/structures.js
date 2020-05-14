@@ -18,7 +18,6 @@ class Pokemon {
 
 class Chart {
   constructor(options) {
-    this.data = options.data;
     this.width = options.width;
     this.height = options.height;
     this.plot_width = options.plot_width;

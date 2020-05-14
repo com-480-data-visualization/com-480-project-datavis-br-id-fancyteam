@@ -1,4 +1,4 @@
-function createChart(x_field, y_field) {
+function createChart(x_field, y_field, color_field) {
   // Get max and min attack bounds for X-scale and defense bounds for Y-scale.
   let maxXPoint = 0;
   let minXPoint = 1000;
@@ -33,7 +33,6 @@ function createChart(x_field, y_field) {
   minYPoint -= 5;
 
   let chart = new Chart({
-    data: pokemons,
     width: plot_width + plot_margin.left + plot_margin.right,
     height: plot_height + plot_margin.top + plot_margin.bottom,
     plot_width: plot_width,
@@ -114,22 +113,24 @@ function createChart(x_field, y_field) {
       .attr('class', 'main')
       .attr('clip-path', 'url(#clip)');
 
-  var points = d3.range(chart.data.length).map(i => {
-    return [parseFloat(chart.data[i].Attack),
-    parseFloat(chart.data[i].Defense), chart.data[i].Type_1, chart.data[i].Name]});
+  var points = d3.range(pokemonCount).map(i => {
+    return [parseFloat(pokemons[i].Attack),
+    parseFloat(pokemons[i].Defense), pokemons[i].Type_1, pokemons[i].Name]});
 
   main.selectAll("circle")
   .data(points)
   .enter().append("circle")
     .attr("cx", d => chart.x(d[0]))
     .attr("cy", d => chart.y(d[1]))
-    .attr("r", plot_width/500)
+    .attr("r", 3)
     .attr("fill", d => {
       if (typeToColor.get(d[2])) return typeToColor.get(d[2]);
       return typeToColor.get("???");
     })
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
     .on("click", d => console.log(d[3]));
+
+  zoom();
 
   function brushended() {
     var s = d3.event.selection;
@@ -156,6 +157,6 @@ function createChart(x_field, y_field) {
     svg.selectAll("circle").transition(t)
         .attr("cx", d => chart.x(d[0]))
         .attr("cy", d => chart.y(d[1]))
-        .attr("r", plot_width/500);
+        .attr("r", (chart.x(1) - chart.x(0)) / 2);
   }
 }

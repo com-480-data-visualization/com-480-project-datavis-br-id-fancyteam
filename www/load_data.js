@@ -7,6 +7,8 @@ let pokemonCount = pokemons.length;
 
 d3.csv(data_url).then(function(data) {
   data.forEach(pokemon => pokemons.push(pokemon));
+  console.log(data[0]);
+  pokemonCount = pokemons.length;
 
   createChart("Attack", "Defense");
   //tabulate(columns);
