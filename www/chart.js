@@ -109,28 +109,41 @@ function createChart(x_field, y_field, color_field) {
     .attr("transform", "translate(" + plot_margin.left + "," + (chart.height - 5) + ")")
     .text('Click and drag above to zoom, double click to reset view');
 
-  const main = svg.append('g')
-      .attr('class', 'main')
-      .attr('clip-path', 'url(#clip)');
-
   var points = d3.range(pokemonCount).map(i => {
-    return [parseFloat(pokemons[i].Attack),
-    parseFloat(pokemons[i].Defense), pokemons[i].Type_1, pokemons[i].Name]});
+    return pokemons[i]});
+  var pointSize = (chart.x(1) - chart.x(0)) / 2;
 
-  main.selectAll("circle")
-  .data(points)
-  .enter().append("circle")
-    .attr("cx", d => chart.x(d[0]))
-    .attr("cy", d => chart.y(d[1]))
-    .attr("r", 3)
-    .attr("fill", d => {
-      if (typeToColor.get(d[2])) return typeToColor.get(d[2]);
-      return typeToColor.get("???");
-    })
-    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .on("click", d => console.log(d[3]));
+  var data_points = svg.append('g')
+    .attr('class', 'data_points')
+    .attr('clip-path', 'url(#clip)');
 
-  zoom();
+  const circles = data_points.selectAll("circle")
+    .data(points)
+    .enter().append("circle")
+      .attr("visibility", "hidden")
+      .attr("cx", p => chart.x(p.Attack))
+      .attr("cy", p => chart.y(p.Defense))
+      .attr("r", pointSize)
+      .attr("fill", p => {
+        if (typeToColor.get(p.Type_1)) return typeToColor.get(p.Type_1);
+          return typeToColor.get("???");
+        })
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+      .on("click", p => console.log(p.Name));
+
+  const images = data_points.selectAll("image")
+    .data(points)
+    .enter().append("svg:image")
+      .attr("visibility", "hidden")
+      .attr("xlink:href", p => "data/pictures/32x32/" + p.Id + ".png")
+      .attr("x", p => chart.x(p.Attack) - pointSize/2)
+      .attr("y", p => chart.y(p.Defense) - pointSize/2)
+      .attr("width", Math.round(pointSize))
+      .attr("height", Math.round(pointSize))
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+      .on("click", p => console.log(p.Name));
+
+  draw();
 
   function brushended() {
     var s = d3.event.selection;
@@ -143,20 +156,60 @@ function createChart(x_field, y_field, color_field) {
       chart.y.domain([s[1][1] - plot_margin.top, s[0][1] - plot_margin.top].map(chart.y.invert, chart.y));
       svg.select(".brush").call(brush.move, null)
     }
-    zoom();
+    draw();
   }
 
   function idled() {
     idleTimeout = null;
   }
 
-  function zoom() {
+  function draw() {
     var t = svg.transition().duration(750);
+    var pointSize = (chart.x(1) - chart.x(0)) / 2;
+
     svg.select(".x_axis").transition(t).call(xAxis);
     svg.select(".y_axis").transition(t).call(yAxis);
-    svg.selectAll("circle").transition(t)
-        .attr("cx", d => chart.x(d[0]))
-        .attr("cy", d => chart.y(d[1]))
-        .attr("r", (chart.x(1) - chart.x(0)) / 2);
+
+    if (pointSize <= 6) {
+      data_points.selectAll("image").attr("visibility", "hidden")
+      svg.selectAll("circle").transition(t);
+      data_points.selectAll("circle")
+        .attr("visibility", "visible")
+        .attr("cx", p => chart.x(p.Attack))
+        .attr("cy", p => chart.y(p.Defense))
+        .attr("r", pointSize)
+
+    } else if (pointSize <= 16) {
+      data_points.selectAll("circle").attr("visibility", "hidden")
+      svg.selectAll("image").transition(t);
+      data_points.selectAll("image")
+        .attr("visibility", "visible")
+        .attr("x", p => chart.x(p.Attack) - pointSize/2)
+        .attr("y", p => chart.y(p.Defense) - pointSize/2)
+        .attr("width", 4 * Math.round(pointSize))
+        .attr("height", 4 * Math.round(pointSize))
+        .attr("xlink:href", p => "data/pictures/32x32/" + p.Id + ".png")
+
+    } else if (pointSize <= 30) {
+      data_points.selectAll("circle").attr("visibility", "hidden")
+      svg.selectAll("image").transition(t);
+      data_points.selectAll("image")
+        .attr("visibility", "visible")
+        .attr("x", p => chart.x(p.Attack) - pointSize/2)
+        .attr("y", p => chart.y(p.Defense) - pointSize/2)
+        .attr("width", 4 * Math.round(pointSize))
+        .attr("height", 4 * Math.round(pointSize))
+        .attr("xlink:href", p => "data/pictures/120x120/" + p.Id + ".png")
+    } else {
+      data_points.selectAll("circle").attr("visibility", "hidden")
+      svg.selectAll("image").transition(t);
+      data_points.selectAll("image")
+        .attr("visibility", "visible")
+        .attr("x", p => chart.x(p.Attack) - pointSize/2)
+        .attr("y", p => chart.y(p.Defense) - pointSize/2)
+        .attr("width", Math.round(pointSize))
+        .attr("height", Math.round(pointSize))
+        .attr("xlink:href", p => "data/pictures/256x256/" + p.Id + ".png")
+    }
   }
 }
