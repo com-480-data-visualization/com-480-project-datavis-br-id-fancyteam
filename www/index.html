@@ -1,70 +1,157 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Welcome to Data Visualization</title>
-	<meta name="description" content="Welcome to Data Visualization">
-	<meta name="author" content="K Lis">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Pokémon Picker &mdash; Efficiently choose your future best friends!">
+    <meta name="author" content="Olivier Cloux; Jonathan Collaud; Hugo Hueber">
 
+    <title>Pokémon Picker &mdash; Efficiently choose your future best friends!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="style.css">
+  
+    <!-- Needed scripts -->
+    <script src="./d3.v5.min.js"></script>
+    <script type='text/javascript' src='utils.js'></script>
+    <script type='text/javascript' src='structures.js'></script>
+    <script type='text/javascript' src='load_data.js'></script>
+    <script type='text/javascript' src='chart.js'></script>
+
 </head>
-<body>
 
-<nav>
-	<ul class="width-limited">
-		<li><a href="index.html">Home</a></li>
-		<li><a href="chart.html">Pokemon vizualization</a></li>
-		<li><a href="data_table.html">Data Table</a></li>
-		<li><a href="team.html">Team</a></li>
-	</ul>
-</nav>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
 
-<header class="title-row">
-	<h1> My Visualization Project </h1>
-</header>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg fixed-top navbar-custom" id="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="#">Pokémon Picker</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#about">About
+              <!-- <span class="sr-only">(current)</span> -->
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#picker"><strong>Pokémon Picker !</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#infos">More infos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<main class="width-limited">
-	<h4>Introduction</h4>
-	<p>
-	This visualization unveils the deepest mysteries of our world,
-	showing the facts through the lens of statistical data anlysis
-	and colorful animations.
-	The truth shines brightly and guides the lost minds.
-	</p>
-	<p>
-	We investigate the changes in population of alligators in Lac Léman
-	over the last century and extrapolate the trend to predict
-	a world of reptile domination.
-	Read more <a href="description.html">about our model</a>
-	or the <a href="data.html">sources of our data</a>.
-	</p>
-
-	<div class="rounded">
-		<h4>How to use</h4>
-		<p>
-		Here we would tell you how to interact with the plot below.
-		Sadly, it is not interactive at this stage of the project.
-		Please imagine that the plot is interactive and that clicking on it
-		activates captivating animations.
-		</p>
+  <!-- Page Content -->
+  <div class="container header" id="about"><br/><br/>
+    <div class="row">
+        <div class="col-sm-3">
+            <br/><br/><img src="./img/all_pokemons.gif" />
+        </div>
+        <div class="col-sm-9 text-center">
+            <h1 class="mt-5">Pokémon Picker</h1>
+            <p class="lead">Efficiently choose your future best friends!</p>
+            <p>With Pokémon Picker, harness the power of statistics to find out which Pokémon you're going on an adventure with. We've collected statistics on the different Pokémon, so you can compare them efficiently and systematically.</p>
+            <p>Match your team to your fighting style, choose your favourite Types, and never miss the opportunity to have the perfect team again!</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid" id="picker"><br/><br/>
+	  <div class="chart text-center" id="chart-container">
+	  </div>
+  </div>
+  
+	<div class="container-fluid" id="data"><br/><br/>
+		<div id="data_table" class="width-limited">
+		</div>
 	</div>
-</main>
-
-<figure class="viz-row">
-	<h4>Some examples here</h4>
-	<embed class="width-limited" src="viz_plot.svg" />
-</figure>
-
-<div class="width-limited">
-	<h4>Credits</h4>
-	<p>Meet <a href="./team.html">the authors here</a>. The project was created for the <a href="http://edu.epfl.ch/coursebook/en/data-visualization-COM-480">Data Visualization</a> course at EPFL.
-</div>
-
-<footer></footer>
+  
+  <div class="container" id="infos"><br/>
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="mt-5">More informations</h2>
+        <p class="lead">Learn more about .</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container" id="contact"><br/>
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="mt-5">The Team</h2>
+        <p class="lead">Discover who are behind the project.</p>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+          <img src="img/ocloux.jpg" class="img-fluid" />
+        </div>
+        <div class="col-sm-9">
+          <br/>
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Super_Nerd_(Trainer_class)" target="_blank">Super Nerd</a> <strong>Olivier Cloux</strong></p>
+          <p>Praesent semper urna quis augue tempor, ornare rutrum nisi posuere. Mauris congue tortor eu neque porttitor, eu luctus mauris iaculis.</p>
+          <ul class="list-unstyled">
+            <li>Favorite Pokémon: <strong>x</strong></li>
+            <li>Best move: <strong>x</strong></li>
+            <li>Fighting style: <strong>x</strong></li>
+          </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 text-right">
+          <br/>
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Expert_(Trainer_class)" target="_blank">Expert</a> <strong>Jonathan Collaud</strong></p>
+          <p>Mauris eu nunc tincidunt nibh blandit dignissim. Donec rhoncus imperdiet gravida.</p>
+          <ul class="list-unstyled">
+            <li>Favorite Pokémon: <strong>x</strong></li>
+            <li>Best move: <strong>x</strong></li>
+            <li>Fighting style: <strong>x</strong></li>
+          </ul>
+        </div>
+        <div class="col-sm-3">
+          <img src="img/jcollaud.jpg" class="img-fluid" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+          <img src="img/hhueber.jpg" class="img-fluid" />
+        </div>
+        <div class="col-sm-9">
+          <br/>
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Hex_Maniac_(Trainer_class)" target="_blank">Hex Maniac</a> <strong>Hugo Hueber</strong></p>
+          <p>Cras sit amet elit ante. Fusce ullamcorper, orci eu lobortis pretium, metus justo laoreet lorem, vitae placerat nisl magna non sem.</p>
+          <ul class="list-unstyled">
+            <li>Favorite Pokémon: <strong>Absol</strong></li>
+            <li>Best move: <strong>Requiem</strong></li>
+            <li>Fighting style: <strong>Endgame Havoc</strong></li>
+          </ul>
+        </div>
+    </div>
+    <div class="row">
+      
+    </div>
+  </div>
+  
+    <div class="container footer" id="footer">
+    <br/>
+  </div>
+  
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.slim.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>
