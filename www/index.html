@@ -13,12 +13,13 @@
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="style.css">
-  
+
     <!-- Needed scripts -->
     <script src="./d3.v5.min.js"></script>
     <script type='text/javascript' src='utils.js'></script>
     <script type='text/javascript' src='structures.js'></script>
     <script type='text/javascript' src='load_data.js'></script>
+    <script type='text/javascript' src='filter.js'></script>
     <script type='text/javascript' src='chart.js'></script>
 
 </head>
@@ -67,17 +68,19 @@
       </div>
     </div>
   </div>
-  
+
   <div class="container-fluid" id="picker"><br/><br/>
 	  <div class="chart text-center" id="chart-container">
 	  </div>
+	  <div class="chart text-center" id="filters-area">
+	  </div>
   </div>
-  
+
 	<div class="container-fluid" id="data"><br/><br/>
 		<div id="data_table" class="width-limited">
 		</div>
 	</div>
-  
+
   <div class="container" id="infos"><br/>
     <div class="row">
       <div class="col-sm-12">
@@ -86,7 +89,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="container" id="contact"><br/>
     <div class="row">
       <div class="col-sm-12">
@@ -140,14 +143,14 @@
         </div>
     </div>
     <div class="row">
-      
+
     </div>
   </div>
-  
+
     <div class="container footer" id="footer">
     <br/>
   </div>
-  
+
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.slim.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

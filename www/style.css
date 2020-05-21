@@ -3,7 +3,7 @@ html {
 }
 
   body {
-    position: relative; 
+    position: relative;
   }
 
 .navbar {
@@ -24,7 +24,7 @@ html {
 }
 .navbar .navbar-text a:hover,
 .navbar .navbar-text a:focus {
-  color: #3e55ff; 
+  color: #3e55ff;
 }
 .navbar .navbar-nav .nav-link {
   color: #ecf0f1;
@@ -147,6 +147,12 @@ html {
 .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item.active {
   color: #3e55ff;
   background-color: #8997ff;
+}
+
+#xAxis_label {
+	left: plot_margin.left + plot_width / 2;
+	top: chart.height - 5;
+	text-anchor: middle;
 }
 
 .header {
