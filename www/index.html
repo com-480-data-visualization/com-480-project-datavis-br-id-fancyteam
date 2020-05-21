@@ -23,7 +23,7 @@
 
 </head>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="50">
+<body data-spy="scroll" data-target=".navbar" data-offset="50" onLoad="scrollTo('picker')">
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg fixed-top navbar-custom" id="navbar">
@@ -54,17 +54,19 @@
   </nav>
 
   <!-- Page Content -->
-  <div class="container header" id="about"><br/><br/>
+  <div class="container-fluid header" id="about"><br/><br/>
     <div class="row">
-        <div class="col-sm-3">
+		<div class="col-sm-1"></div>
+        <div class="col-sm-3 text-right">
             <br/><br/><img src="./img/all_pokemons.gif" />
         </div>
-        <div class="col-sm-9 text-center">
+        <div class="col-sm-7 text-left">
             <h1 class="mt-5">Pokémon Picker</h1>
             <p class="lead">Efficiently choose your future best friends!</p>
             <p>With Pokémon Picker, harness the power of statistics to find out which Pokémon you're going on an adventure with. We've collected statistics on the different Pokémon, so you can compare them efficiently and systematically.</p>
             <p>Match your team to your fighting style, choose your favourite Types, and never miss the opportunity to have the perfect team again!</p>
       </div>
+	  <div class="col-sm-1"></div>
     </div>
   </div>
   

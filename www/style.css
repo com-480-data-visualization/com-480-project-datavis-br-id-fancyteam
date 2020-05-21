@@ -1,11 +1,19 @@
+html, body, figure {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
 html {
 	scroll-behavior: smooth;
 }
 
   body {
     position: relative; 
-  }
+}
 
+/* Navigation bar parameters */
 .navbar {
   background-color: #a9b3ff;
 }

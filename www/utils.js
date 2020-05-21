@@ -30,3 +30,9 @@ const typeToColor = new Map([
   ["Water", d3.rgb(104, 144, 240)],
   ["???", d3.rgb(104, 160, 144)]
 ]);
+
+function scrollTo(h){
+    var url = location.href;
+    location.href = "#"+h;
+    history.replaceState(null,null,url);
+}
