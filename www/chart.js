@@ -49,7 +49,7 @@ function createChart(x_field, y_field, color_field) {
     .attr("width", chart.width)
     .attr("height", chart.height);
 
-  var xAxis = d3.axisBottom(chart.x).ticks(plot_width/40);
+  var xAxis = d3.axisBottom(chart.x).ticks(plot_width / 40);
   svg.append("g")
     .attr("class", "x_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
@@ -81,14 +81,14 @@ function createChart(x_field, y_field, color_field) {
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
     .call(xAxisTop);
 
-  var yAxis = d3.axisLeft(chart.y).ticks(plot_height/20);
+  var yAxis = d3.axisLeft(chart.y).ticks(plot_height / 20);
   svg.append("g")
     .attr("class", "y_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
     .call(yAxis);
   svg.append("text")
     .attr("transform", "translate(" + (plot_margin.left - 40) +
-      " ," + (plot_margin.top + plot_height / 2) +") rotate(-90)")
+      " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
     .style("text-anchor", "middle")
     .text(y_field);
 
@@ -100,17 +100,19 @@ function createChart(x_field, y_field, color_field) {
 
   // Add a clipPath: everything out of this area won't be drawn.
   var clip = svg.append("defs").append("svg:clipPath")
-      .attr("id", "clip")
-      .append("svg:rect")
-      .attr("width", plot_width)
-      .attr("height", plot_height)
-      .attr("x", plot_margin.left)
-      .attr("y", plot_margin.top);
+    .attr("id", "clip")
+    .append("svg:rect")
+    .attr("width", plot_width)
+    .attr("height", plot_height)
+    .attr("x", plot_margin.left)
+    .attr("y", plot_margin.top);
 
   // Add brushing
   var brush = d3.brush()
-    .extent([[plot_margin.left, plot_margin.top],
-      [plot_margin.left + plot_width, plot_margin.top + plot_height]])
+    .extent([
+      [plot_margin.left, plot_margin.top],
+      [plot_margin.left + plot_width, plot_margin.top + plot_height]
+    ])
     .on("end", brushended),
     idleTimeout,
     idleDelay = 350;;
@@ -125,8 +127,14 @@ function createChart(x_field, y_field, color_field) {
     .text('Click and drag above to zoom, double click to reset view');
 
   var points = d3.range(pokemonCount).map(i => {
-    return pokemons[i]});
+    return pokemons[i]
+  });
   var pointSize = (chart.x(1) - chart.x(0)) / 2;
+
+  var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 
   var data_points = svg.append('g')
     .attr('class', 'data_points')
@@ -135,28 +143,36 @@ function createChart(x_field, y_field, color_field) {
   const circles = data_points.selectAll("circle")
     .data(points)
     .enter().append("circle")
-      .attr("visibility", "hidden")
-      .attr("cx", p => chart.x(p[x_field]))
-      .attr("cy", p => chart.y(p[y_field]))
-      .attr("r", pointSize)
-      .attr("fill", p => {
-        if (typeToColor.get(p[color_field])) return typeToColor.get(p[color_field]);
-          return typeToColor.get("???");
-        })
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-      .on("click", p => console.log(p));
+    .attr("visibility", "hidden")
+    .attr("cx", p => chart.x(p[x_field]))
+    .attr("cy", p => chart.y(p[y_field]))
+    .attr("r", pointSize)
+    .attr("fill", p => {
+      if (typeToColor.get(p[color_field])) return typeToColor.get(p[color_field]);
+        return typeToColor.get("???");
+      })
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .on("click", p => console.log(p));
 
   const images = data_points.selectAll("image")
     .data(points)
     .enter().append("svg:image")
-      .attr("visibility", "hidden")
-      .attr("xlink:href", p => "data/pictures/32x32/" + p.Id + ".png")
-      .attr("x", p => chart.x(p[x_field]) - pointSize/2)
-      .attr("y", p => chart.y(p[y_field]) - pointSize/2)
-      .attr("width", Math.round(pointSize))
-      .attr("height", Math.round(pointSize))
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-      .on("click", p => console.log(p));
+    .attr("visibility", "hidden")
+    .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
+    .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+    .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+    .attr("width", Math.round(pointSize))
+    .attr("height", Math.round(pointSize))
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .on("click", p => console.log(p))
+    .on("mouseover", function (d) {
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", .9);
+      tooltip.html(d.Name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+    });
 
   draw();
 
@@ -204,32 +220,32 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize/2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize/2)
+        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/32x32/" + p.Id + ".png")
+        .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
 
     } else if (pointSize <= 30) {
       data_points.selectAll("circle").attr("visibility", "hidden")
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize/2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize/2)
+        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/120x120/" + p.Id + ".png")
+        .attr("xlink:href", p => "data/pictures/120x120/" + p.Id.lpad("0", 3) + ".png")
     } else {
       data_points.selectAll("circle").attr("visibility", "hidden")
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize/2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize/2)
+        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", Math.round(pointSize))
         .attr("height", Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/256x256/" + p.Id + ".png")
+        .attr("xlink:href", p => "data/pictures/256x256/" + p.Id.lpad("0", 3) + ".png")
     }
   }
 }

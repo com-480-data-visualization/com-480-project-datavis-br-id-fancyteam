@@ -3,34 +3,35 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Pokémon Picker &mdash; Efficiently choose your future best friends!">
-    <meta name="author" content="Olivier Cloux; Jonathan Collaud; Hugo Hueber">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Pokémon Picker &mdash; Efficiently choose your future best friends!">
+  <meta name="author" content="Olivier Cloux; Jonathan Collaud; Hugo Hueber">
 
-    <title>Pokémon Picker &mdash; Efficiently choose your future best friends!</title>
+  <title>Pokémon Picker &mdash; Efficiently choose your future best friends!</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="style.css">
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 
-    <!-- Needed scripts -->
-    <script src="./d3.v5.min.js"></script>
-    <script type='text/javascript' src='utils.js'></script>
-    <script type='text/javascript' src='structures.js'></script>
-    <script type='text/javascript' src='load_data.js'></script>
-    <script type='text/javascript' src='filter.js'></script>
-    <script type='text/javascript' src='chart.js'></script>
+  <!-- Needed scripts -->
+  <script src="./d3.v5.min.js"></script>
+  <script type='text/javascript' src='utils.js'></script>
+  <script type='text/javascript' src='structures.js'></script>
+  <script type='text/javascript' src='load_data.js'></script>
+  <script type='text/javascript' src='filter.js'></script>
+  <script type='text/javascript' src='chart.js'></script>
 
 </head>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="50">
+<body data-spy="scroll" data-target=".navbar" data-offset="50" onLoad="scrollTo('picker')">
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg fixed-top navbar-custom" id="navbar">
     <div class="container">
       <a class="navbar-brand" href="#">Pokémon Picker</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -55,33 +56,38 @@
   </nav>
 
   <!-- Page Content -->
-  <div class="container header" id="about"><br/><br/>
+  <div class="container-fluid header" id="about"><br /><br />
     <div class="row">
-        <div class="col-sm-3">
-            <br/><br/><img src="./img/all_pokemons.gif" />
-        </div>
-        <div class="col-sm-9 text-center">
-            <h1 class="mt-5">Pokémon Picker</h1>
-            <p class="lead">Efficiently choose your future best friends!</p>
-            <p>With Pokémon Picker, harness the power of statistics to find out which Pokémon you're going on an adventure with. We've collected statistics on the different Pokémon, so you can compare them efficiently and systematically.</p>
-            <p>Match your team to your fighting style, choose your favourite Types, and never miss the opportunity to have the perfect team again!</p>
+      <div class="col-sm-1"></div>
+      <div class="col-sm-3 text-right">
+        <br /><br /><img src="./img/all_pokemons.gif" />
       </div>
+      <div class="col-sm-7 text-left">
+        <h1 class="mt-5">Pokémon Picker</h1>
+        <p class="lead">Efficiently choose your future best friends!</p>
+        <p>With Pokémon Picker, harness the power of statistics to find out which Pokémon you're going on an adventure
+          with. We've collected statistics on the different Pokémon, so you can compare them efficiently and
+          systematically.</p>
+        <p>Match your team to your fighting style, choose your favourite Types, and never miss the opportunity to have
+          the perfect team again!</p>
+      </div>
+      <div class="col-sm-1"></div>
     </div>
   </div>
 
-  <div class="container-fluid" id="picker"><br/><br/>
-	  <div class="chart text-center" id="chart-container">
-	  </div>
-	  <div class="chart text-center" id="filters-area">
-	  </div>
+  <div class="container-fluid" id="picker"><br /><br />
+    <div class="chart text-center" id="chart-container">
+    </div>
+    <div class="chart text-center" id="filters-area">
+    </div>
   </div>
 
-	<div class="container-fluid" id="data"><br/><br/>
-		<div id="data_table" class="width-limited">
-		</div>
-	</div>
+  <div class="container-fluid" id="data"><br /><br />
+    <div id="data_table" class="width-limited">
+    </div>
+  </div>
 
-  <div class="container" id="infos"><br/>
+  <div class="container" id="infos"><br />
     <div class="row">
       <div class="col-sm-12">
         <h2 class="mt-5">More informations</h2>
@@ -90,32 +96,37 @@
     </div>
   </div>
 
-  <div class="container" id="contact"><br/>
-    <div class="row">
-      <div class="col-sm-12">
-        <h2 class="mt-5">The Team</h2>
-        <p class="lead">Discover who are behind the project.</p>
+  <div class="container-fluid header" id="contact">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="mt-5">The Team</h2>
+          <p class="lead">Discover who are behind the project.</p>
+        </div>
       </div>
-    </div>
-    <div class="row">
+      <div class="row">
         <div class="col-sm-3">
           <img src="img/ocloux.jpg" class="img-fluid" />
         </div>
         <div class="col-sm-9">
-          <br/>
-          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Super_Nerd_(Trainer_class)" target="_blank">Super Nerd</a> <strong>Olivier Cloux</strong></p>
-          <p>Praesent semper urna quis augue tempor, ornare rutrum nisi posuere. Mauris congue tortor eu neque porttitor, eu luctus mauris iaculis.</p>
+          <br />
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Super_Nerd_(Trainer_class)"
+              target="_blank">Super Nerd</a> <strong>Olivier Cloux</strong></p>
+          <p>Praesent semper urna quis augue tempor, ornare rutrum nisi posuere. Mauris congue tortor eu neque
+            porttitor, eu luctus mauris iaculis.</p>
           <ul class="list-unstyled">
             <li>Favorite Pokémon: <strong>x</strong></li>
             <li>Best move: <strong>x</strong></li>
             <li>Fighting style: <strong>x</strong></li>
           </ul>
         </div>
-    </div>
-    <div class="row">
+      </div>
+      <hr />
+      <div class="row">
         <div class="col-sm-9 text-right">
-          <br/>
-          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Expert_(Trainer_class)" target="_blank">Expert</a> <strong>Jonathan Collaud</strong></p>
+          <br />
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Expert_(Trainer_class)"
+              target="_blank">Expert</a> <strong>Jonathan Collaud</strong></p>
           <p>Mauris eu nunc tincidunt nibh blandit dignissim. Donec rhoncus imperdiet gravida.</p>
           <ul class="list-unstyled">
             <li>Favorite Pokémon: <strong>x</strong></li>
@@ -126,29 +137,33 @@
         <div class="col-sm-3">
           <img src="img/jcollaud.jpg" class="img-fluid" />
         </div>
-    </div>
-    <div class="row">
+      </div>
+      <hr />
+      <div class="row">
         <div class="col-sm-3">
           <img src="img/hhueber.jpg" class="img-fluid" />
         </div>
         <div class="col-sm-9">
-          <br/>
-          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Hex_Maniac_(Trainer_class)" target="_blank">Hex Maniac</a> <strong>Hugo Hueber</strong></p>
-          <p>Cras sit amet elit ante. Fusce ullamcorper, orci eu lobortis pretium, metus justo laoreet lorem, vitae placerat nisl magna non sem.</p>
+          <br />
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Hex_Maniac_(Trainer_class)"
+              target="_blank">Hex Maniac</a> <strong>Hugo Hueber</strong></p>
+          <p>Cras sit amet elit ante. Fusce ullamcorper, orci eu lobortis pretium, metus justo laoreet lorem, vitae
+            placerat nisl magna non sem.</p>
           <ul class="list-unstyled">
             <li>Favorite Pokémon: <strong>Absol</strong></li>
             <li>Best move: <strong>Requiem</strong></li>
             <li>Fighting style: <strong>Endgame Havoc</strong></li>
           </ul>
         </div>
-    </div>
-    <div class="row">
-
+      </div>
+      <div class="row">
+        <p></p>
+      </div>
     </div>
   </div>
 
-    <div class="container footer" id="footer">
-    <br/>
+  <div class="container footer" id="footer">
+    <p>Made with ❤️, Bootstrap, JQuery, D3, and a bit of blood!</p>
   </div>
 
   <!-- Bootstrap core JavaScript -->

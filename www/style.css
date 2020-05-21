@@ -1,56 +1,78 @@
-html {
-	scroll-behavior: smooth;
+html,
+body,
+figure {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
 }
 
-  body {
-    position: relative;
-  }
+html {
+  scroll-behavior: smooth;
+}
 
+body {
+  position: relative;
+}
+
+/* Navigation bar parameters */
 .navbar {
   background-color: #a9b3ff;
 }
+
 .navbar .navbar-brand {
   color: #ecf0f1;
 }
+
 .navbar .navbar-brand:hover,
 .navbar .navbar-brand:focus {
   color: #3e55ff;
 }
+
 .navbar .navbar-text {
   color: #ecf0f1;
 }
+
 .navbar .navbar-text a {
   color: #3e55ff;
 }
+
 .navbar .navbar-text a:hover,
 .navbar .navbar-text a:focus {
   color: #3e55ff;
 }
+
 .navbar .navbar-nav .nav-link {
   color: #ecf0f1;
   border-radius: .25rem;
   margin: 0 0.25em;
 }
+
 .navbar .navbar-nav .nav-link:not(.disabled):hover,
 .navbar .navbar-nav .nav-link:not(.disabled):focus {
   color: #3e55ff;
 }
+
 .navbar .navbar-nav .dropdown-menu {
   background-color: #a9b3ff;
   border-color: #8997ff;
 }
+
 .navbar .navbar-nav .dropdown-menu .dropdown-item {
   color: #ecf0f1;
 }
+
 .navbar .navbar-nav .dropdown-menu .dropdown-item:hover,
 .navbar .navbar-nav .dropdown-menu .dropdown-item:focus,
 .navbar .navbar-nav .dropdown-menu .dropdown-item.active {
   color: #3e55ff;
   background-color: #8997ff;
 }
+
 .navbar .navbar-nav .dropdown-menu .dropdown-divider {
   border-top-color: #8997ff;
 }
+
 .navbar .navbar-nav .nav-item.active .nav-link,
 .navbar .navbar-nav .nav-item.active .nav-link:hover,
 .navbar .navbar-nav .nav-item.active .nav-link:focus,
@@ -60,23 +82,29 @@ html {
   color: #3e55ff;
   background-color: #8997ff;
 }
+
 .navbar .navbar-toggle {
   border-color: #8997ff;
 }
+
 .navbar .navbar-toggle:hover,
 .navbar .navbar-toggle:focus {
   background-color: #8997ff;
 }
+
 .navbar .navbar-toggle .navbar-toggler-icon {
   color: #ecf0f1;
 }
+
 .navbar .navbar-collapse,
 .navbar .navbar-form {
   border-color: #ecf0f1;
 }
+
 .navbar .navbar-link {
   color: #ecf0f1;
 }
+
 .navbar .navbar-link:hover {
   color: #3e55ff;
 }
@@ -85,10 +113,12 @@ html {
   .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item {
     color: #ecf0f1;
   }
+
   .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item:hover,
   .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item:focus {
     color: #3e55ff;
   }
+
   .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item.active {
     color: #3e55ff;
     background-color: #8997ff;
@@ -99,10 +129,12 @@ html {
   .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item {
     color: #ecf0f1;
   }
+
   .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item:hover,
   .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item:focus {
     color: #3e55ff;
   }
+
   .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item.active {
     color: #3e55ff;
     background-color: #8997ff;
@@ -113,10 +145,12 @@ html {
   .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item {
     color: #ecf0f1;
   }
+
   .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item:hover,
   .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item:focus {
     color: #3e55ff;
   }
+
   .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item.active {
     color: #3e55ff;
     background-color: #8997ff;
@@ -127,10 +161,12 @@ html {
   .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item {
     color: #ecf0f1;
   }
+
   .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item:hover,
   .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item:focus {
     color: #3e55ff;
   }
+
   .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item.active {
     color: #3e55ff;
     background-color: #8997ff;
@@ -140,23 +176,26 @@ html {
 .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item {
   color: #ecf0f1;
 }
+
 .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item:hover,
 .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item:focus {
   color: #3e55ff;
 }
+
 .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item.active {
   color: #3e55ff;
   background-color: #8997ff;
 }
 
-#xAxis_label {
-	left: plot_margin.left + plot_width / 2;
-	top: chart.height - 5;
-	text-anchor: middle;
+.header {
+  width: 100%;
+  left: 0;
+  background-color: #8997ff;
 }
 
-.header {
-    width: 100%;
-    left: 0;
-  background-color: #8997ff;
+.footer {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 100%;
+  text-align: center;
 }
