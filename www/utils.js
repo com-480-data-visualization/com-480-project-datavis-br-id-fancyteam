@@ -3,11 +3,11 @@ const data_url = 'https://raw.githubusercontent.com/com-480-data-visualization/c
 const plot_height = window.innerHeight * 0.65;
 const plot_width = window.innerWidth * 0.75;
 const plot_margin = {
-    top: 100,
-    right: 40,
-    bottom: 40,
-    left: 100
-  };
+  top: 100,
+  right: 40,
+  bottom: 40,
+  left: 100
+};
 
 const typeToColor = new Map([
   ["Bug", d3.rgb(168, 184, 32)],
@@ -31,8 +31,16 @@ const typeToColor = new Map([
   ["???", d3.rgb(104, 160, 144)]
 ]);
 
-function scrollTo(h){
-    var url = location.href;
-    location.href = "#"+h;
-    history.replaceState(null,null,url);
+
+String.prototype.lpad = function (padString, length) {
+  var str = this;
+  while (str.length < length)
+    str = padString + str;
+  return str;
+}
+
+function scrollTo(h) {
+  var url = location.href;
+  location.href = "#" + h;
+  history.replaceState(null, null, url);
 }
