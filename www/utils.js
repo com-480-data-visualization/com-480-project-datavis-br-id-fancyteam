@@ -33,14 +33,14 @@ const typeToColor = new Map([
 
 
 String.prototype.lpad = function (padString, length) {
-    var str = this;
-    while (str.length < length)
-      str = padString + str;
-    return str;
+  var str = this;
+  while (str.length < length)
+    str = padString + str;
+  return str;
+}
 
-
-    function scrollTo(h) {
-      var url = location.href;
-      location.href = "#" + h;
-      history.replaceState(null, null, url);
-    }
+function scrollTo(h) {
+  var url = location.href;
+  location.href = "#" + h;
+  history.replaceState(null, null, url);
+}
