@@ -160,5 +160,12 @@ html {
 .header {
     width: 100%;
     left: 0;
-  background-color: #8997ff;
+    background-color: #8997ff;
+}
+
+.footer {
+    padding-top: 1rem;
+	padding-bottom: 1rem;
+    width: 100%;
+    text-align: center;
 }
