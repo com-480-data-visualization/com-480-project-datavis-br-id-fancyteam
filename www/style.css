@@ -15,22 +15,6 @@ body {
   position: relative;
 }
 
-/* Tooltip */
-div.tooltip {
-  position: absolute;
-  text-align: center;
-  vertical-align: middle;
-  display: inline-block;
-  width: 120px;
-  height: 56px;
-  padding: 2px;
-  font: 15px sans-serif;
-  background: lightsteelblue;
-  border: 0px;
-  border-radius: 8px;
-  pointer-events: none;
-}
-
 /* Navigation bar parameters */
 .navbar {
   background-color: #a9b3ff;
@@ -207,4 +191,11 @@ div.tooltip {
   width: 100%;
   left: 0;
   background-color: #8997ff;
+}
+
+.footer {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 100%;
+  text-align: center;
 }
