@@ -54,11 +54,26 @@ function createChart(x_field, y_field, color_field) {
     .attr("class", "x_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
     .call(xAxis);
-  svg.append("text")
-    .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) +
-      " ," + (chart.height - 5) + ")")
-    .style("text-anchor", "middle")
-    .text("Attack");
+  var xAxisButton = d3.select("#chart-container")
+    .append('select')
+    .attr("xAxis_label","xAxis_label")
+  xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
+      .data(columns)
+    .enter()
+      .append('option')
+    .text(text => text)
+    .attr("value", function (d) { return d; })
+    .on("change", function(d) {
+      var new_value = d3.select(this).property("value")
+      console.log(new_value);
+      createChart(new_value, y_field, color_field);
+    })
+
+  // svg.append("text")
+  //   .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) +
+  //     " ," + (chart.height - 5) +")")
+  //   .style("text-anchor", "middle")
+  //   .text(x_field);
 
   var xAxisTop = d3.axisTop(chart.x).tickValues([]);
   svg.append("g")
@@ -75,7 +90,7 @@ function createChart(x_field, y_field, color_field) {
     .attr("transform", "translate(" + (plot_margin.left - 40) +
       " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
     .style("text-anchor", "middle")
-    .text("Defense");
+    .text(y_field);
 
   var yAxisRight = d3.axisRight(chart.y).tickValues([]);
   svg.append("g")
@@ -129,27 +144,27 @@ function createChart(x_field, y_field, color_field) {
     .data(points)
     .enter().append("circle")
     .attr("visibility", "hidden")
-    .attr("cx", p => chart.x(p.Attack))
-    .attr("cy", p => chart.y(p.Defense))
+    .attr("cx", p => chart.x(p[x_field]))
+    .attr("cy", p => chart.y(p[y_field]))
     .attr("r", pointSize)
     .attr("fill", p => {
-      if (typeToColor.get(p.Type_1)) return typeToColor.get(p.Type_1);
-      return typeToColor.get("???");
-    })
+      if (typeToColor.get(p[color_field])) return typeToColor.get(p[color_field]);
+        return typeToColor.get("???");
+      })
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .on("click", p => console.log(p.Name));
+    .on("click", p => console.log(p));
 
   const images = data_points.selectAll("image")
     .data(points)
     .enter().append("svg:image")
     .attr("visibility", "hidden")
     .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
-    .attr("x", p => chart.x(p.Attack) - pointSize / 2)
-    .attr("y", p => chart.y(p.Defense) - pointSize / 2)
+    .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+    .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
     .attr("width", Math.round(pointSize))
     .attr("height", Math.round(pointSize))
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .on("click", p => console.log(p.Name))
+    .on("click", p => console.log(p))
     .on("mouseover", function (d) {
       tooltip.transition()
         .duration(200)
@@ -160,6 +175,11 @@ function createChart(x_field, y_field, color_field) {
     });
 
   draw();
+
+  columns.forEach(c => {
+    createFilter(c);
+  });
+
 
   function brushended() {
     var s = d3.event.selection;
@@ -191,8 +211,8 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("circle").transition(t);
       data_points.selectAll("circle")
         .attr("visibility", "visible")
-        .attr("cx", p => chart.x(p.Attack))
-        .attr("cy", p => chart.y(p.Defense))
+        .attr("cx", p => chart.x(p[x_field]))
+        .attr("cy", p => chart.y(p[y_field]))
         .attr("r", pointSize)
 
     } else if (pointSize <= 16) {
@@ -200,8 +220,8 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p.Attack) - pointSize / 2)
-        .attr("y", p => chart.y(p.Defense) - pointSize / 2)
+        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
         .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
@@ -211,8 +231,8 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p.Attack) - pointSize / 2)
-        .attr("y", p => chart.y(p.Defense) - pointSize / 2)
+        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
         .attr("xlink:href", p => "data/pictures/120x120/" + p.Id.lpad("0", 3) + ".png")
@@ -221,8 +241,8 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p.Attack) - pointSize / 2)
-        .attr("y", p => chart.y(p.Defense) - pointSize / 2)
+        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
+        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", Math.round(pointSize))
         .attr("height", Math.round(pointSize))
         .attr("xlink:href", p => "data/pictures/256x256/" + p.Id.lpad("0", 3) + ".png")

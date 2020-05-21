@@ -32,3 +32,10 @@ class Chart {
     this.y = d3.scaleLinear().domain(this.y0).range([this.plot_height, 0]);
   }
 }
+
+class Filter {
+  constructor(options) {
+    this.width = 200;
+    this.height = 50;
+  }
+}
