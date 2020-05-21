@@ -135,7 +135,7 @@ function createChart(x_field, y_field, color_field) {
     .data(points)
     .enter().append("svg:image")
       .attr("visibility", "hidden")
-      .attr("xlink:href", p => "data/pictures/32x32/" + p.Id + ".png")
+      .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0",3) + ".png")
       .attr("x", p => chart.x(p.Attack) - pointSize/2)
       .attr("y", p => chart.y(p.Defense) - pointSize/2)
       .attr("width", Math.round(pointSize))
@@ -188,7 +188,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p.Defense) - pointSize/2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/32x32/" + p.Id + ".png")
+        .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0",3) + ".png")
 
     } else if (pointSize <= 30) {
       data_points.selectAll("circle").attr("visibility", "hidden")
@@ -199,7 +199,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p.Defense) - pointSize/2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/120x120/" + p.Id + ".png")
+        .attr("xlink:href", p => "data/pictures/120x120/" + p.Id.lpad("0",3) + ".png")
     } else {
       data_points.selectAll("circle").attr("visibility", "hidden")
       svg.selectAll("image").transition(t);
@@ -209,7 +209,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p.Defense) - pointSize/2)
         .attr("width", Math.round(pointSize))
         .attr("height", Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/256x256/" + p.Id + ".png")
+        .attr("xlink:href", p => "data/pictures/256x256/" + p.Id.lpad("0", 3) + ".png")
     }
   }
 }

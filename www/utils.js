@@ -30,3 +30,11 @@ const typeToColor = new Map([
   ["Water", d3.rgb(104, 144, 240)],
   ["???", d3.rgb(104, 160, 144)]
 ]);
+
+
+String.prototype.lpad = function(padString, length) {
+  var str = this;
+  while (str.length < length)
+      str = padString + str;
+  return str;
+}
