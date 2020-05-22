@@ -1,6 +1,6 @@
 function createFilter(c) {
-  var filters = d3.select("#filter-area")
-    .append('text')
+  var filters = d3.select("#filters-area")
+    .append('select')
   filters.selectAll('options') // Next 4 lines add 6 options = 6 colors
     .data(columns)
     .enter()

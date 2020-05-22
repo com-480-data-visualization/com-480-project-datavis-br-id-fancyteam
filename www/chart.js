@@ -54,28 +54,51 @@ function createChart(x_field, y_field, color_field) {
     .attr("class", "x_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
     .call(xAxis);
-  // var xAxisButton = d3.select("#chart-container")
-  //   .append('select')
-  //   .attr("id","xAxis_label")
-  //   .attr("left", plot_margin.left + plot_width / 2)
-  //   .attr("top", chart.height - 5)
-  // xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
-  //     .data(columns)
-  //   .enter()
-  //     .append('option')
-  //   .text(text => text)
-  //   .attr("value", function (d) { return d; })
-  //   .on("change", function(d) {
-  //     var new_value = d3.select(this).property("value")
-  //     console.log(new_value);
-  //     createChart(new_value, y_field, color_field);
-    //})
+  var xAxisButton = d3.select("#chart-container")
+    .append('select')
+    .attr("xAxis_label","xAxis_label")
+    .on('change',onChangeXAxis)
+  xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
+      .data(columns)
+    .enter()
+      .append('option')
+    .text(text => text)
+    .attr("value", function (d) { return d; })
+    .on("change", function(d) {
+      var new_value = d3.select(this).property("value")
+      console.log(new_value);
+      createChart(new_value, y_field, color_field);
+    })
 
-  // svg.append("text")
-  //   .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) +
-  //     " ," + (chart.height - 5) +")")
-  //   .style("text-anchor", "middle")
-  //   .text(x_field);
+  /*d3.select("#filters-area").on("change", function(d) {
+        // recover the option that has been chosen
+        var selectedOption = d3.select(this).property("value")
+        // run the updateChart function with this selected option
+        updateAxis(selectedOption)
+    })*/
+
+
+    function onChangeXAxis() {
+        selectValue = d3.select('select').property('value')
+
+        updateAxis(selectValue)
+    }
+
+    // Update and center the label for the X axis
+    function updateAxisX(lbl) {
+      svg.append("text")
+      .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) + " ," + (chart.height - 5) +")")
+      .style("text-anchor", "middle")
+      .text(lbl);
+    }
+
+    // Update and center the label for the Y axis
+    function updateAxisY(lbl) {
+      svg.append("text")
+      .attr("transform", "translate(" + (plot_margin.left - 40) + " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
+      .style("text-anchor", "middle")
+      .text(y_field);
+    }
 
   var xAxisTop = d3.axisTop(chart.x).tickValues([]);
   svg.append("g")
@@ -88,11 +111,8 @@ function createChart(x_field, y_field, color_field) {
     .attr("class", "y_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
     .call(yAxis);
-  svg.append("text")
-    .attr("transform", "translate(" + (plot_margin.left - 40) +
-      " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
-    .style("text-anchor", "middle")
-    .text(y_field);
+
+  updateAxisY(y_field)
 
   var yAxisRight = d3.axisRight(chart.y).tickValues([]);
   svg.append("g")
