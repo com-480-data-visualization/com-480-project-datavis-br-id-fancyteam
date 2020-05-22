@@ -46,7 +46,7 @@ function createChart(x_field, y_field, color_field) {
   let svg = d3.select("#chart-container").append("svg")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", chart.width)
+    .attr("width", chart.width + 200) // + filters width #uglylyHardcoded
     .attr("height", chart.height);
 
   var xAxis = d3.axisBottom(chart.x).ticks(plot_width / 40);
@@ -54,20 +54,22 @@ function createChart(x_field, y_field, color_field) {
     .attr("class", "x_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
     .call(xAxis);
-  var xAxisButton = d3.select("#chart-container")
-    .append('select')
-    .attr("xAxis_label","xAxis_label")
-  xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
-      .data(columns)
-    .enter()
-      .append('option')
-    .text(text => text)
-    .attr("value", function (d) { return d; })
-    .on("change", function(d) {
-      var new_value = d3.select(this).property("value")
-      console.log(new_value);
-      createChart(new_value, y_field, color_field);
-    })
+  // var xAxisButton = d3.select("#chart-container")
+  //   .append('select')
+  //   .attr("id","xAxis_label")
+  //   .attr("left", plot_margin.left + plot_width / 2)
+  //   .attr("top", chart.height - 5)
+  // xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
+  //     .data(columns)
+  //   .enter()
+  //     .append('option')
+  //   .text(text => text)
+  //   .attr("value", function (d) { return d; })
+  //   .on("change", function(d) {
+  //     var new_value = d3.select(this).property("value")
+  //     console.log(new_value);
+  //     createChart(new_value, y_field, color_field);
+    //})
 
   // svg.append("text")
   //   .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) +
@@ -176,10 +178,24 @@ function createChart(x_field, y_field, color_field) {
 
   draw();
 
-  columns.forEach(c => {
-    createFilter(c);
-  });
+  var filterArea = svg.append("g")
+  var text = filterArea.selectAll("label")
+    .data(columns)
+    .enter()
+    .append("text")
+      .attr("x", chart.width)
+      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * chart.height / columns.length)))
+      .attr("width", 30)
+      .attr("height", chart.height / columns.length)
+  var textLabels = text.text(t => t)
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "17px")
+    .attr("fill", "black")
 
+  var minValueBox = text.append("input")
+      .attr("id", c => ("filter_" + c + "_min"))
+      .attr("placeholder", 0)
+      .attr("width", 30)
 
   function brushended() {
     var s = d3.event.selection;

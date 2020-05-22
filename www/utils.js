@@ -1,9 +1,9 @@
 const data_url = 'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/www/data/pokemon001-721.csv'
 
 const plot_height = window.innerHeight * 0.65;
-const plot_width = window.innerWidth * 0.75;
+const plot_width = window.innerWidth * 0.70;
 const plot_margin = {
-  top: 100,
+  top: 50,
   right: 40,
   bottom: 40,
   left: 100
