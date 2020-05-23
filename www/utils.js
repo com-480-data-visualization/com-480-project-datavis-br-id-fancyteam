@@ -39,6 +39,22 @@ String.prototype.lpad = function (padString, length) {
   return str;
 }
 
+function addressMake(p, size) {
+  let base = `data/pictures/${size}x${size}/`;
+  let ext = ".png";
+  var id = p.Id;
+  if (id.includes("-")) {
+    let s = id.split("-");
+    id = s[0].lpad("0", 3) + "-" + s[1];
+    if (s.length > 2) {
+      id = id + "-" + s[2];
+    }
+  } else {
+    id = id.lpad("0", 3);
+  }
+  return base + id + ext;
+}
+
 function scrollTo(h) {
   var url = location.href;
   location.href = "#" + h;
