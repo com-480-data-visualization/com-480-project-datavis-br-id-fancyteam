@@ -79,7 +79,7 @@ function createChart(x_field, y_field, color_field) {
         selectValue = d3.select('select').property('value')
         updateAxisX(selectValue)
     }
-    
+
     // Update and center the label for the X axis
     function updateAxisX(lbl) {
       svg.append("text")
@@ -87,7 +87,7 @@ function createChart(x_field, y_field, color_field) {
       .style("text-anchor", "middle")
       .text(lbl);
     }
-    
+
     // Update and center the label for the Y axis
     function updateAxisY(lbl) {
       svg.append("text")
@@ -107,7 +107,7 @@ function createChart(x_field, y_field, color_field) {
     .attr("class", "y_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
     .call(yAxis);
-  
+
   updateAxisY(y_field)
 
   var yAxisRight = d3.axisRight(chart.y).tickValues([]);
@@ -176,7 +176,7 @@ function createChart(x_field, y_field, color_field) {
     .data(points)
     .enter().append("svg:image")
     .attr("visibility", "hidden")
-    .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
+    .attr("xlink:href", p => addressMake(p,32))
     .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
     .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
     .attr("width", Math.round(pointSize))
@@ -246,7 +246,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
+        .attr("xlink:href", p => addressMake(p, 32))
 
     } else if (pointSize <= 30) {
       data_points.selectAll("circle").attr("visibility", "hidden")
@@ -257,7 +257,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/120x120/" + p.Id.lpad("0", 3) + ".png")
+        .attr("xlink:href", p => addressMake(p, 120))
     } else {
       data_points.selectAll("circle").attr("visibility", "hidden")
       svg.selectAll("image").transition(t);
@@ -267,7 +267,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", Math.round(pointSize))
         .attr("height", Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/256x256/" + p.Id.lpad("0", 3) + ".png")
+        .attr("xlink:href", p => addressMake(p, 256))
     }
   }
 }
