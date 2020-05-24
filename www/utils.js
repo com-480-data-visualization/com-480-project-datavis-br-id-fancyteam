@@ -1,5 +1,7 @@
+// We are getting informations from here
 const data_url = 'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/www/data/pokemon001-721.csv'
 
+// Basic parameters for the chart
 const plot_height = window.innerHeight * 0.65;
 const plot_width = window.innerWidth * 0.70;
 const plot_margin = {
@@ -9,6 +11,8 @@ const plot_margin = {
   left: 100
 };
 
+// Map each color to a particular type
+// Source: https://bulbapedia.bulbagarden.net/wiki/Category:Type_color_templates
 const typeToColor = new Map([
   ["Bug", d3.rgb(168, 184, 32)],
   ["Dark", d3.rgb(112, 88, 72)],
@@ -31,7 +35,7 @@ const typeToColor = new Map([
   ["???", d3.rgb(104, 160, 144)]
 ]);
 
-
+// ???
 String.prototype.lpad = function (padString, length) {
   var str = this;
   while (str.length < length)
@@ -39,6 +43,23 @@ String.prototype.lpad = function (padString, length) {
   return str;
 }
 
+function addressMake(p, size) {
+  let base = `data/pictures/${size}x${size}/`;
+  let ext = ".png";
+  var id = p.Id;
+  if (id.includes("-")) {
+    let s = id.split("-");
+    id = s[0].lpad("0", 3) + "-" + s[1];
+    if (s.length > 2) {
+      id = id + "-" + s[2];
+    }
+  } else {
+    id = id.lpad("0", 3);
+  }
+  return base + id + ext;
+}
+
+// Scroll to a particular anchor
 function scrollTo(h) {
   var url = location.href;
   location.href = "#" + h;

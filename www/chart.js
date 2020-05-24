@@ -32,6 +32,7 @@ function createChart(x_field, y_field, color_field) {
   maxYPoint += 5;
   minYPoint -= 5;
 
+  // Create the base chart
   let chart = new Chart({
     width: plot_width + plot_margin.left + plot_margin.right,
     height: plot_height + plot_margin.top + plot_margin.bottom,
@@ -43,17 +44,21 @@ function createChart(x_field, y_field, color_field) {
     minY: minYPoint,
   });
 
+  // We gun draw on that
   let svg = d3.select("#chart-container").append("svg")
     .attr("x", 0)
     .attr("y", 0)
     .attr("width", chart.width + 200) // + filters width #uglylyHardcoded
     .attr("height", chart.height);
 
+  //
   var xAxis = d3.axisBottom(chart.x).ticks(plot_width / 40);
   svg.append("g")
     .attr("class", "x_axis")
     .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
     .call(xAxis);
+
+  // Create the dropdown for the X axis
   var xAxisButton = d3.select("#chart-container")
     .append('select')
     .attr("xAxis_label","xAxis_label")
@@ -70,18 +75,9 @@ function createChart(x_field, y_field, color_field) {
       createChart(new_value, y_field, color_field);
     })
 
-  /*d3.select("#filters-area").on("change", function(d) {
-        // recover the option that has been chosen
-        var selectedOption = d3.select(this).property("value")
-        // run the updateChart function with this selected option
-        updateAxis(selectedOption)
-    })*/
-
-
     function onChangeXAxis() {
         selectValue = d3.select('select').property('value')
-
-        updateAxis(selectValue)
+        updateAxisX(selectValue)
     }
 
     // Update and center the label for the X axis
@@ -180,7 +176,7 @@ function createChart(x_field, y_field, color_field) {
     .data(points)
     .enter().append("svg:image")
     .attr("visibility", "hidden")
-    .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
+    .attr("xlink:href", p => addressMake(p,32))
     .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
     .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
     .attr("width", Math.round(pointSize))
@@ -196,6 +192,7 @@ function createChart(x_field, y_field, color_field) {
         .style("top", (d3.event.pageY - 28) + "px");
     });
 
+  // First draw initialization
   draw();
 
   var filterArea = svg.append("g")
@@ -217,6 +214,7 @@ function createChart(x_field, y_field, color_field) {
       .attr("placeholder", 0)
       .attr("width", 30)
 
+  // Done with the selection
   function brushended() {
     var s = d3.event.selection;
     if (!s) {
@@ -231,10 +229,12 @@ function createChart(x_field, y_field, color_field) {
     draw();
   }
 
+  // ???
   function idled() {
     idleTimeout = null;
   }
 
+  // Pictures modification
   function draw() {
     var t = svg.transition().duration(750);
     var pointSize = (chart.x(1) - chart.x(0)) / 2;
@@ -260,7 +260,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/32x32/" + p.Id.lpad("0", 3) + ".png")
+        .attr("xlink:href", p => addressMake(p, 32))
 
     } else if (pointSize <= 30) {
       data_points.selectAll("circle").attr("visibility", "hidden")
@@ -271,7 +271,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/120x120/" + p.Id.lpad("0", 3) + ".png")
+        .attr("xlink:href", p => addressMake(p, 120))
     } else {
       data_points.selectAll("circle").attr("visibility", "hidden")
       svg.selectAll("image").transition(t);
@@ -281,7 +281,7 @@ function createChart(x_field, y_field, color_field) {
         .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
         .attr("width", Math.round(pointSize))
         .attr("height", Math.round(pointSize))
-        .attr("xlink:href", p => "data/pictures/256x256/" + p.Id.lpad("0", 3) + ".png")
+        .attr("xlink:href", p => addressMake(p, 256))
     }
   }
 }
