@@ -100,6 +100,8 @@ class Chart {
       selectValue = d3.select('select').property('value')
       updateAxisX(selectValue)
     }
+
+    // complicated, but only defines arrow heads as "id=end"
     this.svg.append("svg:defs").selectAll("marker")
       .data(["end"]) // Different link/path types can be defined here
       .enter().append("svg:marker") // This section adds in the arrows
@@ -112,6 +114,7 @@ class Chart {
       .attr("orient", "auto")
       .append("svg:path")
       .attr("d", "M0,-5L10,0L0,5");
+
     // X top axis (just the line)
     this.xAxisTop = d3.axisTop(this.x).tickValues([]);
     this.svg.append("g")
@@ -235,10 +238,14 @@ class Chart {
     .style("stroke", p => {
       return "#000";
     })
+
+    // add all evolutions arrows
     var links = this.links
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-      .attr("marker-end", "url(#end)");
-    // Add pokemons' points
+      .attr("marker-end", "url(#end)"); // arrow heads
+
+
+      // Add pokemons' points
     const circles = this.data_points.selectAll("circle")
       .data(this.points)
       .enter().append("circle")
@@ -254,15 +261,16 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
       .on("click", p => console.log(p))
       .on("mouseover", function (d) {
+        //put "hovered-other" class to all
         circles.classed("hovered-other", true)
-        d3.select(this)
-          .classed("hovered-other", false)
-          .classed("hovered-this", true)
+        //then remove and put "hovered-this" for hovered
+        d3.select(this).classed("hovered-other", false)
+        // add class "hovered-other" to all links
         links.classed("hovered-other", true)
       })
       .on("mouseout", function (d) {
+        // remove all classes
         circles.classed("hovered-other", false)
-          .classed("hovered-this", false)
         links.classed("hovered-other", false)
       });
 
@@ -270,7 +278,7 @@ class Chart {
 
 
     // Add pokemons' images
-    var tooltips = this.tooltips
+    var tooltip = this.tooltip
     const images = this.data_points.selectAll("image")
       .data(this.points)
       .enter()
@@ -284,15 +292,21 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
       .on("click", p => console.log(p))
       .on("mouseover", function (d) {
-        tooltips.transition()
+        tooltip.transition() // show tooltip
           .duration(200)
           .style("opacity", .9);
-        tooltips.html(d.Name)
+        tooltip.html(d.Name) // change text and position it close to mouse
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY - 28) + "px");
+        images.classed("hovered-other", true)
+        links.classed("hovered-other", true)
+        d3.select(this).classed("hovered-other", false).moveToFront()
+
       })
       .on("mouseout", function (d) {
-        this.tooltip.transition().duration(200).style("opacity", 0)
+        tooltip.transition().duration(200).style("opacity", 0)
+        links.classed("hovered-other", false)
+        images.classed("hovered-other", false)
       });
 
 

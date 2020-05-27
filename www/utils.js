@@ -132,6 +132,12 @@ function addressMake(p, size) {
   return base + id + ext;
 }
 
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
+
 // Scroll to a particular anchor
 function scrollTo(h) {
   var url = location.href;

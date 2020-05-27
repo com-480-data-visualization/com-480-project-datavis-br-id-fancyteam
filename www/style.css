@@ -20,10 +20,6 @@ body {
   opacity:0.3;
 }
 
-.hovered-this {
-  opacity:1;
-}
-
 /* tooltip */
 div.tooltip {
   position: absolute;
