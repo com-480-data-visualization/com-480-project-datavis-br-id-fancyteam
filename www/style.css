@@ -16,9 +16,14 @@ body {
 }
 
 /* Turn off every features */
-.hovered-other {
+.hovered-other,.connector {
   opacity:0.3;
 }
+
+.connector.hovered-over {
+  opacity:1;
+}
+
 
 /* tooltip */
 div.tooltip {

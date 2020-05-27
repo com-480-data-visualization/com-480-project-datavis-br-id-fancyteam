@@ -280,14 +280,14 @@ class Chart {
         //then remove and put "hovered-this" for hovered
         d3.select(this).classed("hovered-other", false)
         // add class "hovered-other" to all links
-        links.classed("hovered-other", p => (p.target != d.Id && p.source != d.Id))
+        links.classed("hovered-over", p => (p.target == d.Id || p.source == d.Id))
 
         display_tooltip(d)
       })
       .on("mouseout", function (d) {
         // remove all classes
         circles.classed("hovered-other", false)
-        links.classed("hovered-other", false)
+        links.classed("hovered-over", false)
         hide_tooltip()
       });
 
@@ -314,13 +314,13 @@ class Chart {
       .on("mouseover", function (d) {
         display_tooltip(d);
         images.classed("hovered-other", true)
-        links.classed("hovered-other", p => (p.target != d.Id && p.source != d.Id))
+        links.classed("hovered-over", p => (p.target == d.Id || p.source == d.Id))
         d3.select(this).classed("hovered-other", false).moveToFront()
 
       })
       .on("mouseout", function (d) {
         hide_tooltip();
-        links.classed("hovered-other", false)
+        links.classed("hovered-over", false)
         images.classed("hovered-other", false)
       });
 
