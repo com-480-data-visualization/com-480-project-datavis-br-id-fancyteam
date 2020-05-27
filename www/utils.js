@@ -1,14 +1,21 @@
+// We are getting informations from here
 const data_url = 'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/www/data/pokemon001-721.csv'
 
+// Basic parameters for the chart
 const plot_height = window.innerHeight * 0.65;
-const plot_width = window.innerWidth * 0.75;
+const plot_width = window.innerWidth * 0.70;
 const plot_margin = {
-  top: 100,
+  top: 50,
   right: 40,
   bottom: 40,
   left: 100
 };
 
+const filter_height = window.innerHeight * 0.65;
+const filter_width = window.innerWidth * 0.20;
+
+// Map each color to a particular type
+// Source: https://bulbapedia.bulbagarden.net/wiki/Category:Type_color_templates
 const typeToColor = new Map([
   ["Bug", d3.rgb(168, 184, 32)],
   ["Dark", d3.rgb(112, 88, 72)],
@@ -100,6 +107,8 @@ const evolutions = [
 ]
 
 
+// pad a string with `padString` until il reaches length `length`
+// e.g. "3".lpad("0", 5) --> "00003"
 String.prototype.lpad = function (padString, length) {
   var str = this;
   while (str.length < length)
@@ -123,6 +132,7 @@ function addressMake(p, size) {
   return base + id + ext;
 }
 
+// Scroll to a particular anchor
 function scrollTo(h) {
   var url = location.href;
   location.href = "#" + h;
