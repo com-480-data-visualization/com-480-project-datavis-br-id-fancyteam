@@ -228,12 +228,13 @@ class Chart {
   }
 
   draw_init() {
+
     this.points = d3.range(pokemonCount).map(i => {
       return pokemons[i]
     });
 
+    // define tooltip for local usage (necessary)
     var tooltip = this.tooltip
-
     function display_tooltip(d) {
       tooltip.transition() // show tooltip
         .duration(200)
@@ -279,7 +280,7 @@ class Chart {
         //then remove and put "hovered-this" for hovered
         d3.select(this).classed("hovered-other", false)
         // add class "hovered-other" to all links
-        links.classed("hovered-other", true)
+        links.classed("hovered-other", p => p.target != d.Id)
 
         display_tooltip(d)
       })
