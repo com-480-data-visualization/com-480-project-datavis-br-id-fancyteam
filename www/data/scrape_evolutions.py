@@ -12,6 +12,8 @@ for d in soup.find_all('div', {'class': "infocard-list-evo"}):
         if dc.name == "div":
             to_evo = dc.findChildren("span", recursive=False)[1].small.string
             if src_evo != None:
+                if int(src_evo[1:]) > 721 or int(to_evo[1:]) > 721:
+                    continue
                 evolutions.append((int(src_evo[1:]), int(to_evo[1:])))
         if dc.name == "span":
             try:
@@ -21,6 +23,8 @@ for d in soup.find_all('div', {'class': "infocard-list-evo"}):
                                                  recursive=True):
                         split_to = split.small.string
                         if split_to != src_evo:
+                            if int(src_evo[1:]) > 721 or int(to_evo[1:]) > 721:
+                                continue
                             evolutions.append((int(src_evo[1:]),
                                                int(split_to[1:])))
                 continue
