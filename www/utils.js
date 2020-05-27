@@ -31,6 +31,74 @@ const typeToColor = new Map([
   ["???", d3.rgb(104, 160, 144)]
 ]);
 
+// const evolutions = {
+//   1: 2,
+//   2: 3,
+//   4: 5,
+//   5: 6,
+//   7: 8,
+//   8: 9,
+//   10: 11,
+//   11: 12,
+//   13: 14,
+//   14: 15,
+//   16: 17,
+//   17: 18,
+//   19: 20,
+//   21: 22,
+//   23: 24,
+//   172: 25,
+//   25: 26,
+//   27: 28,
+//   29: 30,
+//   30: 31,
+//   32: 33,
+//   33: 34,
+//   173: 35,
+//   35: 36,
+//   37: 38,
+//   41: 42,
+//   42: 169,
+//   43: 44,
+//   45: [45, 182]
+// }
+
+const evolutions = [
+    {"source": 1, "target": 2},
+    {"source": 2, "target": 3},
+    {"source": 4, "target": 5},
+    {"source": 5, "target": 6},
+    {"source": 7, "target": 8} ,
+    {"source": 8, "target": 9},
+    {"source": 10, "target": 11},
+    {"source": 11, "target": 12},
+    {"source": 13, "target": 14},
+    {"source": 14, "target": 15},
+    {"source": 16, "target": 17},
+    {"source": 17, "target": 18},
+    {"source": 19, "target": 20},
+    {"source": 21, "target": 22},
+    {"source": 23, "target": 24},
+    {"source": 172, "target": 25},
+    {"source": 25, "target": 26},
+    {"source": 27, "target": 28},
+    {"source": 29, "target": 30},
+    {"source": 30, "target": 31},
+    {"source": 32, "target": 33},
+    {"source": 33, "target": 34},
+    {"source": 173, "target": 35},
+    {"source": 35, "target": 36},
+    {"source": 37, "target": 38},
+    {"source": 41, "target": 42},
+    {"source": 42, "target": 169},
+    {"source": 43, "target": 44},
+    {"source": 44, "target": 45},
+    {"source": 44, "target": 182},
+    {"source": 46, "target": 47},
+    {"source": 48, "target": 49},
+    {"source":50, "target": 51}
+]
+
 
 String.prototype.lpad = function (padString, length) {
   var str = this;

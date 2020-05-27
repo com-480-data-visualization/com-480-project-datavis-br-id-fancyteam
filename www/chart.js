@@ -56,15 +56,17 @@ function createChart(x_field, y_field, color_field) {
     .call(xAxis);
   var xAxisButton = d3.select("#chart-container")
     .append('select')
-    .attr("xAxis_label","xAxis_label")
-    .on('change',onChangeXAxis)
+    .attr("xAxis_label", "xAxis_label")
+    .on('change', onChangeXAxis)
   xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
-      .data(columns)
+    .data(columns)
     .enter()
-      .append('option')
+    .append('option')
     .text(text => text)
-    .attr("value", function (d) { return d; })
-    .on("change", function(d) {
+    .attr("value", function (d) {
+      return d;
+    })
+    .on("change", function (d) {
       var new_value = d3.select(this).property("value")
       console.log(new_value);
       createChart(new_value, y_field, color_field);
@@ -77,28 +79,40 @@ function createChart(x_field, y_field, color_field) {
         updateAxis(selectedOption)
     })*/
 
+  svg.append("svg:defs").selectAll("marker")
+    .data(["end"]) // Different link/path types can be defined here
+    .enter().append("svg:marker") // This section adds in the arrows
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", 0.5)
+    .attr("markerWidth", 10)
+    .attr("markerHeight", 10)
+    .attr("orient", "auto")
+    .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,5");
 
-    function onChangeXAxis() {
-        selectValue = d3.select('select').property('value')
+  function onChangeXAxis() {
+    selectValue = d3.select('select').property('value')
 
-        updateAxis(selectValue)
-    }
+    updateAxis(selectValue)
+  }
 
-    // Update and center the label for the X axis
-    function updateAxisX(lbl) {
-      svg.append("text")
-      .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) + " ," + (chart.height - 5) +")")
+  // Update and center the label for the X axis
+  function updateAxisX(lbl) {
+    svg.append("text")
+      .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) + " ," + (chart.height - 5) + ")")
       .style("text-anchor", "middle")
       .text(lbl);
-    }
+  }
 
-    // Update and center the label for the Y axis
-    function updateAxisY(lbl) {
-      svg.append("text")
+  // Update and center the label for the Y axis
+  function updateAxisY(lbl) {
+    svg.append("text")
       .attr("transform", "translate(" + (plot_margin.left - 40) + " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
       .style("text-anchor", "middle")
       .text(y_field);
-    }
+  }
 
   var xAxisTop = d3.axisTop(chart.x).tickValues([]);
   svg.append("g")
@@ -151,6 +165,7 @@ function createChart(x_field, y_field, color_field) {
   var points = d3.range(pokemonCount).map(i => {
     return pokemons[i]
   });
+  const translation = "translate(" + plot_margin.left + "," + plot_margin.top + ")"
   var pointSize = (chart.x(1) - chart.x(0)) / 2;
 
   var tooltip = d3.select("body").append("div")
@@ -162,6 +177,16 @@ function createChart(x_field, y_field, color_field) {
     .attr('class', 'data_points')
     .attr('clip-path', 'url(#clip)');
 
+  var links = data_points.selectAll("line")
+    .data(evolutions)
+    .enter().append("line")
+    .attr("class", "connector")
+    .style("stroke", p => {
+      return "#000";
+    })
+    .attr("transform", translation)
+    .attr("marker-end", "url(#end)");
+
   const circles = data_points.selectAll("circle")
     .data(points)
     .enter().append("circle")
@@ -169,23 +194,40 @@ function createChart(x_field, y_field, color_field) {
     .attr("cx", p => chart.x(p[x_field]))
     .attr("cy", p => chart.y(p[y_field]))
     .attr("r", pointSize)
+    .attr("id", p => p.Id)
     .attr("fill", p => {
       if (typeToColor.get(p[color_field])) return typeToColor.get(p[color_field]);
-        return typeToColor.get("???");
-      })
-    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .on("click", p => console.log(p));
+      return typeToColor.get("???");
+    })
+    .attr("transform", translation)
+    .on("click", p => console.log(p))
+    .on("mouseover", function (d) {
+      circles.classed("hovered-other", true)
+      var nodeSelection = d3.select(this)
+      nodeSelection
+        .classed("hovered-other", false)
+        .classed("hovered-this", true)
+      links.classed("hovered-other", true)
+    })
+    .on("mouseout", function(d){
+      circles.classed("hovered-other", false)
+      .classed("hovered-this", false)
+      links.classed("hovered-other", true)
+    });
+
+
 
   const images = data_points.selectAll("image")
     .data(points)
-    .enter().append("svg:image")
+    .enter()
+    .append("svg:image")
     .attr("visibility", "hidden")
-    .attr("xlink:href", p => addressMake(p,32))
+    .attr("xlink:href", p => addressMake(p, 32))
     .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
     .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
     .attr("width", Math.round(pointSize))
     .attr("height", Math.round(pointSize))
-    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .attr("transform", translation)
     .on("click", p => console.log(p))
     .on("mouseover", function (d) {
       tooltip.transition()
@@ -194,6 +236,9 @@ function createChart(x_field, y_field, color_field) {
       tooltip.html(d.Name)
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
+    })
+    .on("mouseout", function (d) {
+      tooltip.transition().duration(200).style("opacity", 0)
     });
 
   draw();
@@ -201,6 +246,7 @@ function createChart(x_field, y_field, color_field) {
   columns.forEach(c => {
     createFilter(c);
   });
+
 
 
   function brushended() {
@@ -221,6 +267,22 @@ function createChart(x_field, y_field, color_field) {
     idleTimeout = null;
   }
 
+  function getXpos(p, pointSize) {
+    if (pointSize <= 6) {
+      return chart.x(p[x_field])
+    } else {
+      return chart.x(p[x_field]) - pointSize / 2
+    }
+  }
+
+  function getYpos(p, pointSize) {
+    if (pointSize <= 6) {
+      return chart.y(p[y_field])
+    } else {
+      return chart.y(p[y_field]) - pointSize / 2
+    }
+  }
+
   function draw() {
     var t = svg.transition().duration(750);
     var pointSize = (chart.x(1) - chart.x(0)) / 2;
@@ -233,8 +295,8 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("circle").transition(t);
       data_points.selectAll("circle")
         .attr("visibility", "visible")
-        .attr("cx", p => chart.x(p[x_field]))
-        .attr("cy", p => chart.y(p[y_field]))
+        .attr("cx", p => getXpos(p, pointSize))
+        .attr("cy", p => getYpos(p, pointSize))
         .attr("r", pointSize)
 
     } else if (pointSize <= 16) {
@@ -242,8 +304,8 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+        .attr("x", p => getXpos(p, pointSize))
+        .attr("y", p => getYpos(p, pointSize))
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
         .attr("xlink:href", p => addressMake(p, 32))
@@ -253,8 +315,8 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+        .attr("x", p => getXpos(p, pointSize))
+        .attr("y", p => getYpos(p, pointSize))
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
         .attr("xlink:href", p => addressMake(p, 120))
@@ -263,11 +325,41 @@ function createChart(x_field, y_field, color_field) {
       svg.selectAll("image").transition(t);
       data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+        .attr("x", p => getXpos(p, pointSize))
+        .attr("y", p => getYpos(p, pointSize))
         .attr("width", Math.round(pointSize))
         .attr("height", Math.round(pointSize))
         .attr("xlink:href", p => addressMake(p, 256))
     }
+
+    links
+      .attr("x1", d => {
+        for (var i = 0; i < points.length; i++) {
+          if (points[i].Id == d.source) {
+            return getXpos(points[i], pointSize)
+          }
+        }
+      })
+      .attr("y1", d => {
+        for (var i = 0; i < points.length; i++) {
+          if (points[i].Id == d.source) {
+            return getYpos(points[i], pointSize)
+          }
+        }
+      })
+      .attr("x2", d => {
+        for (var i = 0; i < points.length; i++) {
+          if (points[i].Id == d.target) {
+            return getXpos(points[i], pointSize)
+          }
+        }
+      })
+      .attr("y2", d => {
+        for (var i = 0; i < points.length; i++) {
+          if (points[i].Id == d.target) {
+            return getYpos(points[i], pointSize)
+          }
+        }
+      });
   }
 }
