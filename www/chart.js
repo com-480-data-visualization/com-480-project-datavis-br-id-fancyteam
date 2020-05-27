@@ -80,6 +80,7 @@ class Chart {
     // Create the dropdown for the X axis
     this.xAxisButton = d3.select("#chart-container")
       .append('select')
+      .attr("id", "xaxisselect")
       .attr("xAxis_label", "xAxis_label")
       .on('change', onChangeXAxis)
     this.xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
@@ -90,30 +91,24 @@ class Chart {
       .attr("value", function (d) {
         return d;
       })
-      .on("change", function (d) {
+      /*.on("change", function (d) {
         var new_value = d3.select(this).property("value")
         console.log(new_value);
         updateChart(new_value, y_field, color_field);
-      })
+      })*/
 
+    // Reference to the chart so we can pass it down.
+    var cha = this;
+    
     function onChangeXAxis() {
-      selectValue = d3.select('select').property('value')
-      updateAxisX(selectValue)
+      var selectValue = d3.select('#xaxisselect').property("value");
+      cha.updateChart(selectValue, cha.y_field, cha.color_field)
     }
-
-    // complicated, but only defines arrow heads as "id=end"
-    this.svg.append("svg:defs").selectAll("marker")
-      .data(["end"]) // Different link/path types can be defined here
-      .enter().append("svg:marker") // This section adds in the arrows
-      .attr("id", String)
-      .attr("viewBox", "0 -5 10 10")
-      .attr("refX", 15)
-      .attr("refY", 0.5)
-      .attr("markerWidth", 10)
-      .attr("markerHeight", 10)
-      .attr("orient", "auto")
-      .append("svg:path")
-      .attr("d", "M0,-5L10,0L0,5");
+    
+    function onChangeYAxis() {
+      var selectValue = d3.select('#xaxisselect').property("value");
+      cha.updateChart(cha.x_field, selectValue, cha.color_field)
+    }
 
     // X top axis (just the line)
     this.xAxisTop = d3.axisTop(this.x).tickValues([]);
@@ -129,15 +124,29 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
       .call(this.yAxis);
 
-    // X right axis (just the line)
+    // Y right axis (just the line)
     this.yAxisRight = d3.axisRight(this.y).tickValues([]);
     this.svg.append("g")
       .attr("class", "y_axis")
       .attr("transform", "translate(" + (plot_margin.left + plot_width) + "," + plot_margin.top + ")")
       .call(this.yAxisRight);
+
+    // complicated, but only defines arrow heads as "id=end"
+    this.svg.append("svg:defs").selectAll("marker")
+      .data(["end"]) // Different link/path types can be defined here
+      .enter().append("svg:marker") // This section adds in the arrows
+      .attr("id", String)
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 15)
+      .attr("refY", 0.5)
+      .attr("markerWidth", 10)
+      .attr("markerHeight", 10)
+      .attr("orient", "auto")
+      .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
   }
 
-  updateChart(x_field = columns[6], y_field = columns[7], color_field = columns[2]) {
+  updateChart(x_field = columns[7], y_field = columns[7], color_field = columns[2]) {
     this.x_field = x_field;
     this.y_field = y_field;
     this.color_field = color_field;
