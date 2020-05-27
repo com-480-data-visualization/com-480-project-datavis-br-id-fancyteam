@@ -119,13 +119,6 @@ class Chart {
     .call(this.yAxisRight);
   }
 
-  updateAxis(){
-    this.x0 = [this.minX, this.maxX];
-    this.x.domain(this.x0);
-    this.y0 = [this.minY, this.maxY];
-    this.y.domain(this.y0);
-  }
-
   updateChart(x_field = columns[6], y_field = columns[7], color_field = columns[2]) {
     this.x_field = x_field;
     this.y_field = y_field;
@@ -164,7 +157,10 @@ class Chart {
     this.maxY = maxYPoint + 5;
     this.minY = minYPoint - 5;
 
-    this.updateAxis();
+    this.x0 = [this.minX, this.maxX];
+    this.x.domain(this.x0);
+    this.y0 = [this.minY, this.maxY];
+    this.y.domain(this.y0);
 
     // Update and center the label for the X axis
     function updateAxisX(lbl) {
@@ -182,56 +178,15 @@ class Chart {
       .text(lbl);
     }
 
-    var points = d3.range(pokemonCount).map(i => {
-      return pokemons[i]
-    });
-    var pointSize = (this.x(1) - this.x(0)) / 2;
-
     var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-
+    // Create the data_points
     this.data_points = this.svg.append('g')
     .attr('class', 'data_points')
     .attr('clip-path', 'url(#clip)');
-
-    const circles = this.data_points.selectAll("circle")
-    .data(points)
-    .enter().append("circle")
-    .attr("visibility", "hidden")
-    .attr("cx", p => this.x(p[x_field]))
-    .attr("cy", p => this.y(p[y_field]))
-    .attr("r", pointSize)
-    .attr("fill", p => {
-      if (typeToColor.get(p[color_field])) return typeToColor.get(p[color_field]);
-      return typeToColor.get("???");
-    })
-    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .on("click", p => console.log(p));
-
-    const images = this.data_points.selectAll("image")
-    .data(points)
-    .enter().append("svg:image")
-    .attr("visibility", "hidden")
-    .attr("xlink:href", p => addressMake(p,32))
-    .attr("x", p => this.x(p[x_field]) - pointSize / 2)
-    .attr("y", p => this.y(p[y_field]) - pointSize / 2)
-    .attr("width", Math.round(pointSize))
-    .attr("height", Math.round(pointSize))
-    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .on("click", p => console.log(p))
-    .on("mouseover", function (d) {
-      tooltip.transition()
-      .duration(200)
-      .style("opacity", .9);
-      tooltip.html(d.Name)
-      .style("left", (d3.event.pageX) + "px")
-      .style("top", (d3.event.pageY - 28) + "px");
-    });
-
-    // First draw initialization
-    this.draw();
+    this.draw_init();
 
     var filterArea = this.svg.append("g")
     var text = filterArea.selectAll("label")
@@ -251,6 +206,50 @@ class Chart {
     .attr("id", c => ("filter_" + c + "_min"))
     .attr("placeholder", 0)
     .attr("width", 30)
+  }
+
+  draw_init(){
+    var points = d3.range(pokemonCount).map(i => {
+      return pokemons[i]
+    });
+    var pointSize = (this.x(1) - this.x(0)) / 2;
+
+    // Add pokemons' points
+    const circles = this.data_points.selectAll("circle")
+    .data(points)
+    .enter().append("circle")
+    .attr("visibility", "hidden")
+    .attr("cx", p => this.x(p[this.x_field]))
+    .attr("cy", p => this.y(p[this.y_field]))
+    .attr("r", pointSize)
+    .attr("fill", p => {
+      if (typeToColor.get(p[this.color_field])) return typeToColor.get(p[this.color_field]);
+      return typeToColor.get("???");
+    })
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .on("click", p => console.log(p));
+
+    // Add pokemons' images
+    const images = this.data_points.selectAll("image")
+    .data(points)
+    .enter().append("svg:image")
+    .attr("visibility", "hidden")
+    .attr("xlink:href", p => addressMake(p,32))
+    .attr("x", p => this.x(p[this.x_field]) - pointSize / 2)
+    .attr("y", p => this.y(p[this.y_field]) - pointSize / 2)
+    .attr("width", Math.round(pointSize))
+    .attr("height", Math.round(pointSize))
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .on("click", p => console.log(p))
+    .on("mouseover", function (d) {
+      tooltip.transition()
+      .duration(200)
+      .style("opacity", .9);
+      tooltip.html(d.Name)
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px");
+    });
+    this.draw();
   }
 
   draw() {
