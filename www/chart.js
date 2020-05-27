@@ -204,6 +204,7 @@ class Chart {
     this.data_points = this.svg.append('g')
       .attr('class', 'data_points')
       .attr('clip-path', 'url(#clip)');
+
     this.draw_init();
 
     var filterArea = this.svg.append("g")
@@ -230,22 +231,34 @@ class Chart {
     this.points = d3.range(pokemonCount).map(i => {
       return pokemons[i]
     });
+
+    var tooltip = this.tooltip
+
+    function display_tooltip(d) {
+      tooltip.transition() // show tooltip
+        .duration(200)
+        .style("opacity", .9);
+      tooltip.html(d.Name) // change text and position it close to mouse
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+    }
+
     var pointSize = (this.x(1) - this.x(0)) / 2;
     this.links = this.data_points.selectAll("line")
-    .data(evolutions)
-    .enter().append("line")
-    .attr("class", "connector")
-    .style("stroke", p => {
-      return "#000";
-    })
-
-    // add all evolutions arrows
-    var links = this.links
+      .data(evolutions)
+      .enter().append("line")
+      .attr("class", "connector")
+      .style("stroke", p => {
+        return "#000";
+      })
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-      .attr("marker-end", "url(#end)"); // arrow heads
+      .attr("marker-end", "url(#end)") // arrow heads
+      .attr("source-pt", p => p.source)
+      .attr("target-pt", p => p.target)
 
+    var links = this.links;
 
-      // Add pokemons' points
+    // Add pokemons' points
     const circles = this.data_points.selectAll("circle")
       .data(this.points)
       .enter().append("circle")
@@ -267,18 +280,24 @@ class Chart {
         d3.select(this).classed("hovered-other", false)
         // add class "hovered-other" to all links
         links.classed("hovered-other", true)
+
+        display_tooltip(d)
       })
       .on("mouseout", function (d) {
         // remove all classes
         circles.classed("hovered-other", false)
         links.classed("hovered-other", false)
+        hide_tooltip()
       });
 
 
 
 
     // Add pokemons' images
-    var tooltip = this.tooltip
+
+    function hide_tooltip() {
+      tooltip.transition().duration(200).style("opacity", 0)
+    }
     const images = this.data_points.selectAll("image")
       .data(this.points)
       .enter()
@@ -292,19 +311,14 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
       .on("click", p => console.log(p))
       .on("mouseover", function (d) {
-        tooltip.transition() // show tooltip
-          .duration(200)
-          .style("opacity", .9);
-        tooltip.html(d.Name) // change text and position it close to mouse
-          .style("left", (d3.event.pageX) + "px")
-          .style("top", (d3.event.pageY - 28) + "px");
+        display_tooltip(d);
         images.classed("hovered-other", true)
         links.classed("hovered-other", true)
         d3.select(this).classed("hovered-other", false).moveToFront()
 
       })
       .on("mouseout", function (d) {
-        tooltip.transition().duration(200).style("opacity", 0)
+        hide_tooltip();
         links.classed("hovered-other", false)
         images.classed("hovered-other", false)
       });
