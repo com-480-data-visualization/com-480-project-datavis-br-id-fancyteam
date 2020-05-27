@@ -80,6 +80,7 @@ class Chart {
     // Create the dropdown for the X axis
     this.xAxisButton = d3.select("#chart-container")
       .append('select')
+      .attr("id", "xaxisselect")
       .attr("xAxis_label", "xAxis_label")
       .on('change', onChangeXAxis)
     this.xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
@@ -90,15 +91,23 @@ class Chart {
       .attr("value", function (d) {
         return d;
       })
-      .on("change", function (d) {
+      /*.on("change", function (d) {
         var new_value = d3.select(this).property("value")
         console.log(new_value);
         updateChart(new_value, y_field, color_field);
-      })
+      })*/
 
+    // Reference to the chart so we can pass it down.
+    var cha = this;
+    
     function onChangeXAxis() {
-      selectValue = d3.select('select').property('value')
-      updateAxisX(selectValue)
+      var selectValue = d3.select('#xaxisselect').property("value");
+      cha.updateChart(selectValue, cha.y_field, cha.color_field)
+    }
+    
+    function onChangeYAxis() {
+      var selectValue = d3.select('#xaxisselect').property("value");
+      cha.updateChart(cha.x_field, selectValue, cha.color_field)
     }
 
     // complicated, but only defines arrow heads as "id=end"
@@ -137,7 +146,7 @@ class Chart {
       .call(this.yAxisRight);
   }
 
-  updateChart(x_field = columns[6], y_field = columns[7], color_field = columns[2]) {
+  updateChart(x_field = columns[7], y_field = columns[7], color_field = columns[2]) {
     this.x_field = x_field;
     this.y_field = y_field;
     this.color_field = color_field;
