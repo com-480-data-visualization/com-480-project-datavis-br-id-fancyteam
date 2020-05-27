@@ -1,123 +1,53 @@
-function createChart(x_field, y_field, color_field) {
-  // Get max and min attack bounds for X-scale and defense bounds for Y-scale.
-  let maxXPoint = 0;
-  let minXPoint = 1000;
-  let maxYPoint = 0;
-  let minYPoint = 1000;
+class Chart {
+  constructor(options) {
+    this.width = options.width;
+    this.height = options.height;
+    this.idleBrushDelay = 350; // milliseconds, delay to double click, otherwise the brush is triggered to zoom
 
-  pokemons.forEach(pokemon => {
-    for (let field in pokemon) {
-      if (pokemon.hasOwnProperty(field) && field == x_field) {
-        value = parseFloat(pokemon[field]);
-        if (value > maxXPoint) {
-          maxXPoint = value;
-        }
-        if (value < minXPoint) {
-          minXPoint = value;
-        }
-      }
-      if (pokemon.hasOwnProperty(field) && field == y_field) {
-        value = parseFloat(pokemon[field]);
-        if (value > maxYPoint) {
-          maxYPoint = value;
-        }
-        if (value < minYPoint) {
-          minYPoint = value;
-        }
-      }
-    }
-  });
-  maxXPoint += 5;
-  minXPoint -= 5;
-  maxYPoint += 5;
-  minYPoint -= 5;
-
-  // Create the base chart
-  let chart = new Chart({
-    width: plot_width + plot_margin.left + plot_margin.right,
-    height: plot_height + plot_margin.top + plot_margin.bottom,
-    plot_width: plot_width,
-    plot_height: plot_height,
-    maxX: maxXPoint,
-    minX: minXPoint,
-    maxY: maxYPoint,
-    minY: minYPoint,
-  });
-
-  // We gun draw on that
-  let svg = d3.select("#chart-container").append("svg")
+    // The whole chart area, i.e. plot, axis, filters, ...
+    this.svg = d3.select("#chart-container").append("svg")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", chart.width + 200) // + filters width #uglylyHardcoded
-    .attr("height", chart.height);
+    .attr("width", this.width)
+    .attr("height", this.height);
 
-  //
-  var xAxis = d3.axisBottom(chart.x).ticks(plot_width / 40);
-  svg.append("g")
-    .attr("class", "x_axis")
-    .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
-    .call(xAxis);
+    // Initialization of the axis
+    this.createAxis();
 
-  // Create the dropdown for the X axis
-  var xAxisButton = d3.select("#chart-container")
-    .append('select')
-    .attr("xAxis_label","xAxis_label")
-    .on('change',onChangeXAxis)
-  xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
-      .data(columns)
-    .enter()
-      .append('option')
-    .text(text => text)
-    .attr("value", function (d) { return d; })
-    .on("change", function(d) {
-      var new_value = d3.select(this).property("value")
-      console.log(new_value);
-      createChart(new_value, y_field, color_field);
-    })
+    // The brush feature
+    var idleBrushTimeout;
+    this.brush = d3.brush()
+    .extent([[plot_margin.left, plot_margin.top],
+      [plot_margin.left + plot_width, plot_margin.top + plot_height]])
+    .on("end", _ => {
+      var s = d3.event.selection;
+      if (!s) {
+        if (!idleBrushTimeout){
+          return idleBrushTimeout = setTimeout(idled, this.idleBrushDelay);
+        }
+        this.x.domain(this.x0);
+        this.y.domain(this.y0);
+      } else {
+        this.x.domain([s[0][0] - plot_margin.left, s[1][0] - plot_margin.left].map(this.x.invert, this.x));
+        this.y.domain([s[1][1] - plot_margin.top, s[0][1] - plot_margin.top].map(this.y.invert, this.y));
+        this.svg.select(".brush").call(this.brush.move, null);
+      }
+      this.draw();
+    });
+    this.svg.append("g")
+    .attr("class", "brush")
+    .call(this.brush)
+    this.svg.append("text")
+    .attr("class", "instructions")
+    .attr("transform", "translate(" + plot_margin.left + "," + (this.height - 5) + ")")
+    .text('Click and drag above to zoom, double click to reset view');
 
-    function onChangeXAxis() {
-        selectValue = d3.select('select').property('value')
-        updateAxisX(selectValue)
+    function idled() {
+      idleBrushTimeout = null;
     }
 
-    // Update and center the label for the X axis
-    function updateAxisX(lbl) {
-      svg.append("text")
-      .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) + " ," + (chart.height - 5) +")")
-      .style("text-anchor", "middle")
-      .text(lbl);
-    }
-
-    // Update and center the label for the Y axis
-    function updateAxisY(lbl) {
-      svg.append("text")
-      .attr("transform", "translate(" + (plot_margin.left - 40) + " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
-      .style("text-anchor", "middle")
-      .text(y_field);
-    }
-
-  var xAxisTop = d3.axisTop(chart.x).tickValues([]);
-  svg.append("g")
-    .attr("class", "x_axis")
-    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .call(xAxisTop);
-
-  var yAxis = d3.axisLeft(chart.y).ticks(plot_height / 20);
-  svg.append("g")
-    .attr("class", "y_axis")
-    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
-    .call(yAxis);
-
-  updateAxisY(y_field)
-
-  var yAxisRight = d3.axisRight(chart.y).tickValues([]);
-  svg.append("g")
-    .attr("class", "y_axis")
-    .attr("transform", "translate(" + (plot_margin.left + plot_width) + "," + plot_margin.top + ")")
-    .call(yAxisRight);
-
-  // Add a clipPath: everything out of this area won't be drawn.
-  var clip = svg.append("defs").append("svg:clipPath")
+    // Add a clipPath: everything out of this area won't be drawn.
+    var clip = this.svg.append("defs").append("svg:clipPath")
     .attr("id", "clip")
     .append("svg:rect")
     .attr("width", plot_width)
@@ -125,160 +55,248 @@ function createChart(x_field, y_field, color_field) {
     .attr("x", plot_margin.left)
     .attr("y", plot_margin.top);
 
-  // Add brushing
-  var brush = d3.brush()
-    .extent([
-      [plot_margin.left, plot_margin.top],
-      [plot_margin.left + plot_width, plot_margin.top + plot_height]
-    ])
-    .on("end", brushended),
-    idleTimeout,
-    idleDelay = 350;;
+  }
 
-  svg.append("g")
-    .attr("class", "brush")
-    .call(brush)
+  createAxis(){
+    this.maxX = 1000;
+    this.minX = 0;
+    this.maxY = 1000;
+    this.minY = 0;
 
-  svg.append("text")
-    .attr("class", "instructions")
-    .attr("transform", "translate(" + plot_margin.left + "," + (chart.height - 5) + ")")
-    .text('Click and drag above to zoom, double click to reset view');
+    this.x0 = [this.minX, this.maxX];
+    this.x = d3.scaleLinear().domain(this.x0).range([0, plot_width]);
+    this.y0 = [this.minY, this.maxY];
+    this.y = d3.scaleLinear().domain(this.y0).range([plot_height, 0]);
 
-  var points = d3.range(pokemonCount).map(i => {
-    return pokemons[i]
-  });
-  var pointSize = (chart.x(1) - chart.x(0)) / 2;
+    // X axis
+    this.xAxis = d3.axisBottom(this.x).ticks(plot_width / 40);
+    this.svg.append("g")
+    .attr("class", "x_axis")
+    .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
+    .call(this.xAxis);
 
-  var tooltip = d3.select("body").append("div")
+    // Create the dropdown for the X axis
+    this.xAxisButton = d3.select("#chart-container")
+    .append('select')
+    .attr("xAxis_label","xAxis_label")
+    .on('change',onChangeXAxis)
+    this.xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
+    .data(columns)
+    .enter()
+    .append('option')
+    .text(text => text)
+    .attr("value", function (d) { return d; })
+    .on("change", function(d) {
+      var new_value = d3.select(this).property("value")
+      console.log(new_value);
+      updateChart(new_value, y_field, color_field);
+    })
+
+    function onChangeXAxis() {
+      selectValue = d3.select('select').property('value')
+      updateAxisX(selectValue)
+    }
+
+    // X top axis (just the line)
+    this.xAxisTop = d3.axisTop(this.x).tickValues([]);
+    this.svg.append("g")
+    .attr("class", "x_axis")
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .call(this.xAxisTop);
+
+    // Y axis
+    this.yAxis = d3.axisLeft(this.y).ticks(plot_height / 20);
+    this.svg.append("g")
+    .attr("class", "y_axis")
+    .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+    .call(this.yAxis);
+
+    // X right axis (just the line)
+    this.yAxisRight = d3.axisRight(this.y).tickValues([]);
+    this.svg.append("g")
+    .attr("class", "y_axis")
+    .attr("transform", "translate(" + (plot_margin.left + plot_width) + "," + plot_margin.top + ")")
+    .call(this.yAxisRight);
+  }
+
+  updateAxis(){
+    this.x0 = [this.minX, this.maxX];
+    this.x.domain(this.x0);
+    this.y0 = [this.minY, this.maxY];
+    this.y.domain(this.y0);
+  }
+
+  updateChart(x_field = columns[6], y_field = columns[7], color_field = columns[2]) {
+    this.x_field = x_field;
+    this.y_field = y_field;
+    this.color_field = color_field;
+
+    // Get max and min attack bounds for X-scale and defense bounds for Y-scale.
+    let maxXPoint = 0;
+    let minXPoint = 1000;
+    let maxYPoint = 0;
+    let minYPoint = 1000;
+
+    pokemons.forEach(pokemon => {
+      for (let field in pokemon) {
+        if (pokemon.hasOwnProperty(field) && field == x_field) {
+          let value = parseFloat(pokemon[field]);
+          if (value > maxXPoint) {
+            maxXPoint = value;
+          }
+          if (value < minXPoint) {
+            minXPoint = value;
+          }
+        }
+        if (pokemon.hasOwnProperty(field) && field == y_field) {
+          let value = parseFloat(pokemon[field]);
+          if (value > maxYPoint) {
+            maxYPoint = value;
+          }
+          if (value < minYPoint) {
+            minYPoint = value;
+          }
+        }
+      }
+    });
+    this.maxX = maxXPoint + 5;
+    this.minX = minXPoint - 5;
+    this.maxY = maxYPoint + 5;
+    this.minY = minYPoint - 5;
+
+    this.updateAxis();
+
+    // Update and center the label for the X axis
+    function updateAxisX(lbl) {
+      this.svg.append("text")
+      .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) + " ," + (chart.height - 5) +")")
+      .style("text-anchor", "middle")
+      .text(lbl);
+    }
+
+    // Update and center the label for the Y axis
+    function updateAxisY(lbl) {
+      this.svg.append("text")
+      .attr("transform", "translate(" + (plot_margin.left - 40) + " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
+      .style("text-anchor", "middle")
+      .text(lbl);
+    }
+
+    var points = d3.range(pokemonCount).map(i => {
+      return pokemons[i]
+    });
+    var pointSize = (this.x(1) - this.x(0)) / 2;
+
+    var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
 
-  var data_points = svg.append('g')
+    this.data_points = this.svg.append('g')
     .attr('class', 'data_points')
     .attr('clip-path', 'url(#clip)');
 
-  const circles = data_points.selectAll("circle")
+    const circles = this.data_points.selectAll("circle")
     .data(points)
     .enter().append("circle")
     .attr("visibility", "hidden")
-    .attr("cx", p => chart.x(p[x_field]))
-    .attr("cy", p => chart.y(p[y_field]))
+    .attr("cx", p => this.x(p[x_field]))
+    .attr("cy", p => this.y(p[y_field]))
     .attr("r", pointSize)
     .attr("fill", p => {
       if (typeToColor.get(p[color_field])) return typeToColor.get(p[color_field]);
-        return typeToColor.get("???");
-      })
+      return typeToColor.get("???");
+    })
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
     .on("click", p => console.log(p));
 
-  const images = data_points.selectAll("image")
+    const images = this.data_points.selectAll("image")
     .data(points)
     .enter().append("svg:image")
     .attr("visibility", "hidden")
     .attr("xlink:href", p => addressMake(p,32))
-    .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
-    .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+    .attr("x", p => this.x(p[x_field]) - pointSize / 2)
+    .attr("y", p => this.y(p[y_field]) - pointSize / 2)
     .attr("width", Math.round(pointSize))
     .attr("height", Math.round(pointSize))
     .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
     .on("click", p => console.log(p))
     .on("mouseover", function (d) {
       tooltip.transition()
-        .duration(200)
-        .style("opacity", .9);
+      .duration(200)
+      .style("opacity", .9);
       tooltip.html(d.Name)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px");
     });
 
-  // First draw initialization
-  draw();
+    // First draw initialization
+    this.draw();
 
-  var filterArea = svg.append("g")
-  var text = filterArea.selectAll("label")
+    var filterArea = this.svg.append("g")
+    var text = filterArea.selectAll("label")
     .data(columns)
     .enter()
     .append("text")
-      .attr("x", chart.width)
-      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * chart.height / columns.length)))
-      .attr("width", 30)
-      .attr("height", chart.height / columns.length)
-  var textLabels = text.text(t => t)
+    .attr("x", plot_width + plot_margin.left + plot_margin.right)
+    .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (columns.length + 1))))
+    .attr("width", 30)
+    .attr("height", this.height / columns.length)
+    var textLabels = text.text(t => t)
     .attr("font-family", "sans-serif")
     .attr("font-size", "17px")
     .attr("fill", "black")
 
-  var minValueBox = text.append("input")
-      .attr("id", c => ("filter_" + c + "_min"))
-      .attr("placeholder", 0)
-      .attr("width", 30)
-
-  // Done with the selection
-  function brushended() {
-    var s = d3.event.selection;
-    if (!s) {
-      if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
-      chart.x.domain(chart.x0);
-      chart.y.domain(chart.y0);
-    } else {
-      chart.x.domain([s[0][0] - plot_margin.left, s[1][0] - plot_margin.left].map(chart.x.invert, chart.x));
-      chart.y.domain([s[1][1] - plot_margin.top, s[0][1] - plot_margin.top].map(chart.y.invert, chart.y));
-      svg.select(".brush").call(brush.move, null)
-    }
-    draw();
+    var minValueBox = text.append("input")
+    .attr("id", c => ("filter_" + c + "_min"))
+    .attr("placeholder", 0)
+    .attr("width", 30)
   }
 
-  // ???
-  function idled() {
-    idleTimeout = null;
-  }
+  draw() {
+    var t = this.svg.transition().duration(750);
+    var pointSize = (this.x(1) - this.x(0)) / 2;
 
-  // Pictures modification
-  function draw() {
-    var t = svg.transition().duration(750);
-    var pointSize = (chart.x(1) - chart.x(0)) / 2;
-
-    svg.select(".x_axis").transition(t).call(xAxis);
-    svg.select(".y_axis").transition(t).call(yAxis);
+    this.svg.select(".x_axis").transition(t).call(this.xAxis);
+    this.svg.select(".y_axis").transition(t).call(this.yAxis);
 
     if (pointSize <= 6) {
-      data_points.selectAll("image").attr("visibility", "hidden")
-      svg.selectAll("circle").transition(t);
-      data_points.selectAll("circle")
+      this.data_points.selectAll("image").attr("visibility", "hidden")
+      this.svg.selectAll("circle").transition(t);
+      this.data_points.selectAll("circle")
         .attr("visibility", "visible")
-        .attr("cx", p => chart.x(p[x_field]))
-        .attr("cy", p => chart.y(p[y_field]))
+        .attr("cx", p => this.x(p[this.x_field]))
+        .attr("cy", p => this.y(p[this.y_field]))
         .attr("r", pointSize)
 
     } else if (pointSize <= 16) {
-      data_points.selectAll("circle").attr("visibility", "hidden")
-      svg.selectAll("image").transition(t);
-      data_points.selectAll("image")
+      this.data_points.selectAll("circle").attr("visibility", "hidden")
+      this.svg.selectAll("image").transition(t);
+      this.data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+        .attr("x", p => this.x(p[this.x_field]) - pointSize / 2)
+        .attr("y", p => this.y(p[this.y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
         .attr("xlink:href", p => addressMake(p, 32))
 
     } else if (pointSize <= 30) {
-      data_points.selectAll("circle").attr("visibility", "hidden")
-      svg.selectAll("image").transition(t);
-      data_points.selectAll("image")
+      this.data_points.selectAll("circle").attr("visibility", "hidden")
+      this.svg.selectAll("image").transition(t);
+      this.data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+        .attr("x", p => this.x(p[this.x_field]) - pointSize / 2)
+        .attr("y", p => this.y(p[this.y_field]) - pointSize / 2)
         .attr("width", 4 * Math.round(pointSize))
         .attr("height", 4 * Math.round(pointSize))
         .attr("xlink:href", p => addressMake(p, 120))
     } else {
-      data_points.selectAll("circle").attr("visibility", "hidden")
-      svg.selectAll("image").transition(t);
-      data_points.selectAll("image")
+      this.data_points.selectAll("circle").attr("visibility", "hidden")
+      this.svg.selectAll("image").transition(t);
+      this.data_points.selectAll("image")
         .attr("visibility", "visible")
-        .attr("x", p => chart.x(p[x_field]) - pointSize / 2)
-        .attr("y", p => chart.y(p[y_field]) - pointSize / 2)
+        .attr("x", p => this.x(p[this.x_field]) - pointSize / 2)
+        .attr("y", p => this.y(p[this.y_field]) - pointSize / 2)
         .attr("width", Math.round(pointSize))
         .attr("height", Math.round(pointSize))
         .attr("xlink:href", p => addressMake(p, 256))

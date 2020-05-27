@@ -11,6 +11,9 @@ const plot_margin = {
   left: 100
 };
 
+const filter_height = window.innerHeight * 0.65;
+const filter_width = window.innerWidth * 0.20;
+
 // Map each color to a particular type
 // Source: https://bulbapedia.bulbagarden.net/wiki/Category:Type_color_templates
 const typeToColor = new Map([
