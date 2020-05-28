@@ -8,7 +8,7 @@ const plot_margin = {
   top: 50,
   right: 40,
   bottom: 40,
-  left: 100
+  left: 40
 };
 
 const filter_height = window.innerHeight * 0.65;
