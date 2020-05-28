@@ -598,40 +598,39 @@ class Chart {
       if(pointSize <= 32) return 120;
       return 256;
     }
-    
+
     function visibility_sliders(d) {
       var slider_total = d3.select("#slider_total").property("value");
       if(d.Total < slider_total) return "hidden";
-      
       // We did not have time to test them all.
       // var slider_hp = d3.select("#slider_hp").property("value");
       // if(d.HP < slider_hp) return "hidden";
-      
-      
+
+
       // var slider_attack = d3.select("#slider_attack").property("value");
       // if(d.Attack < slider_attack) return "hidden";
-      
-      
+
+
       // var slider_defense = d3.select("#slider_defense").property("value");
       // if(d.Defense < slider_defense) return "hidden";
-      
-      
+
+
       // var slider_spatk = d3.select("#slider_spatk").property("value");
       // if(d.Sp_Atk < slider_spatk) return "hidden";
-      
-      
+
+
       // var slider_spdef = d3.select("#slider_spdef").property("value");
       // if(d.Sp_Def < slider_spdef) return "hidden";
-      
-      
+
+
       // var slider_speed = d3.select("#slider_speed").property("value");
       // if(d.Speed < slider_speed) return "hidden";
-      
-      
+
+
       // var slider_generation = d3.select("#slider_generation").property("value");
       // if(d.Generation < slider_generation) return "hidden";
-      
-      
+
+
       return "visible";
     }
 
@@ -640,6 +639,11 @@ class Chart {
       this.data_points.selectAll("image")
         .transition(t)
         .attr("visibility", "hidden")
+        .attr("x", p => this.getXpos(p, 5 * pointSize))
+        .attr("y", p => this.getYpos(p, 5 * pointSize))
+        .attr("width", 5 * Math.round(pointSize))
+        .attr("height", 5 * Math.round(pointSize))
+        .attr("xlink:href", p => addressMake(p, sizeToPixel(pointSize)))
       this.data_points.selectAll("circle")
         .transition(t)
         .attr("visibility", visibility_sliders)
@@ -650,6 +654,9 @@ class Chart {
       this.data_points.selectAll("circle")
         .transition(t)
         .attr("visibility", "hidden")
+        .attr("cx", p => this.getXpos(p, pointSize))
+        .attr("cy", p => this.getYpos(p, pointSize))
+        .attr("r", pointSize)
       this.data_points.selectAll("image")
         .transition(t)
         .attr("visibility", visibility_sliders)
