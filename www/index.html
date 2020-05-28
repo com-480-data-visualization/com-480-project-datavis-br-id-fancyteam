@@ -4,10 +4,8 @@
 <head>
 
   <meta charset="utf-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description"
-    content="Pokémon Picker &mdash; Efficiently choose your future best friends!">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Pokémon Picker &mdash; Efficiently choose your future best friends!">
   <meta name="author" content="Olivier Cloux; Jonathan Collaud; Hugo Hueber">
 
   <title>Pokémon Picker &mdash; Efficiently choose your future best friends!
@@ -16,6 +14,7 @@
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modal.css">
 
   <!-- Needed scripts -->
   <script src="./d3.v5.min.js"></script>
@@ -27,16 +26,14 @@
 
 </head>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="50"
-  onLoad="scrollTo('picker')">
+<body data-spy="scroll" data-target=".navbar" data-offset="50" onLoad="scrollTo('picker')">
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg fixed-top navbar-custom" id="navbar">
     <div class="container">
       <a class="navbar-brand" href="#">Pokémon Picker</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse"
-        data-target="#navbarResponsive" aria-controls="navbarResponsive"
-        aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -61,6 +58,135 @@
     </div>
   </nav>
 
+  <!-- The Modal -->
+  <div class="modal" id="tuto1" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Tutorial</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Hello and welcome in this tutorial! Are you ready to begin ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto2">Go
+          ahead</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="tuto2" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Tutorial II - The Graph</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        There are several things you can do here:
+        <ul>
+          <li>Click, hold and draw a square to zoom somewhere...</li>
+          <li>...then double-click somewhere else than an image to reset the view</li>
+          <li>Hover over a point or an image to have a better view, and see some stats</li>
+          <li>When you do so, the arrows you see are the evolutions of the Pokémons</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto1">Previous</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto3">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="tuto3" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Tutorial III - The Axes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You can change the axes how you like. This will reposition the points in the graph, and
+        update the scale accordingly. There are many combination, try to find interesting ones!
+        <br>
+        To begin with, the axes are set to "Attack" and "Defense".
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto2">Previous</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto4">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="tuto4" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Tutorial IV - The Filters</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        For the moment, the view is a bit bulky. That's because we display about 700 pokemon and 360 evolutions.
+        You can remove some points by applying "Filters", and only keep those you are interested in.
+        For example, try to keep only the legendary Pokémons.
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto3">Previous</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto5">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="tuto5" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Tutorial V - The color</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        When you are too far, the Pokémons are displayed as small colored circles.
+        By default, the color depends on the primary type of the Pokémon. You can chose
+        another colouring condition by selecting the "Third Axis" tool.
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto4">Previous</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto6">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="tuto6" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Tutorial VI - The End</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        That's about it for this tutorial! If something is unclear, you can still restart the tutorial,
+        or come back using the "previous" button.
+        <br>
+        Thanks for visiting us. We hope you have fun!
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto5">Previous</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Finish</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Page Content -->
   <div class="container-fluid header" id="about"><br /><br />
     <div class="row">
@@ -82,6 +208,11 @@
       </div>
       <div class="col-sm-1"></div>
     </div>
+  </div>
+  <!-- Trigger/Open The Modal -->
+  <div id="button-container" style="height: 50px; margin: 15px auto">
+    <button type="button" style="position: absolute; left: 50%; margin: 15px auto"
+    class="btn btn-info btn-lg" data-toggle="modal" data-target="#tuto1">Need help?</button>
   </div>
 
   <div class="container-fluid" id="picker">
@@ -117,8 +248,7 @@
         </div>
         <div class="col-sm-9">
           <br />
-          <p class="lead"><a
-              href="https://bulbapedia.bulbagarden.net/wiki/Super_Nerd_(Trainer_class)"
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Super_Nerd_(Trainer_class)"
               target="_blank">Super Nerd</a> <strong>Olivier Cloux</strong></p>
           <p>“Strong Pokemon. Weak Pokemon. That is only the selfish perception
             of people. Truly skilled trainers should try to win with all their
@@ -134,8 +264,7 @@
       <div class="row">
         <div class="col-sm-9 text-right">
           <br />
-          <p class="lead"><a
-              href="https://bulbapedia.bulbagarden.net/wiki/Engineer_(Trainer_class)"
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Engineer_(Trainer_class)"
               target="_blank">Engineer</a> <strong>Jonathan Collaud</strong></p>
           <p>“We do have a lot in common. The same earth, the same air, the same
             sky. Maybe if we started looking at what’s the same, instead of
@@ -157,8 +286,7 @@
         </div>
         <div class="col-sm-9">
           <br />
-          <p class="lead"><a
-              href="https://bulbapedia.bulbagarden.net/wiki/Hex_Maniac_(Trainer_class)"
+          <p class="lead"><a href="https://bulbapedia.bulbagarden.net/wiki/Hex_Maniac_(Trainer_class)"
               target="_blank">Hex Maniac</a> <strong>Hugo Hueber</strong></p>
           <p>“It’s more important to master the cards you’re holding than to
             complain about the ones your opponent was dealt.” – Grimsley</p>
@@ -182,7 +310,6 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.slim.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
