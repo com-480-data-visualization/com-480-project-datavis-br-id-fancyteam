@@ -215,6 +215,7 @@ class Chart {
       .attr("align", "left")
       .text("Total   ")
       .append("input")
+      .attr("id", "slider_total")
       .attr("type", "range")
       .attr("min", 180)
       .attr("max", 780)
@@ -226,6 +227,7 @@ class Chart {
       .attr("align", "left")
       .text("HP   ")
       .append("input")
+      .attr("id", "slider_hp")
       .attr("type", "range")
       .attr("min", 1)
       .attr("max", 255)
@@ -243,12 +245,13 @@ class Chart {
       .attr("max", 190)
       .attr("step", 1)
       .attr("value", 5)
-      .on("input", slided_attack);
+      .on("input", slided);
 
     var slider_defense = d3.select("#filters-container").append("p")
       .attr("align", "left")
       .text("Defense   ")
       .append("input")
+      .attr("id", "slider_defense")
       .attr("type", "range")
       .attr("min", 5)
       .attr("max", 230)
@@ -260,6 +263,7 @@ class Chart {
       .attr("align", "left")
       .text("Sp_Atk   ")
       .append("input")
+      .attr("id", "slider_spatk")
       .attr("type", "range")
       .attr("min", 10)
       .attr("max", 194)
@@ -271,6 +275,7 @@ class Chart {
       .attr("align", "left")
       .text("Sp_Def   ")
       .append("input")
+      .attr("id", "slider_spdef")
       .attr("type", "range")
       .attr("min", 20)
       .attr("max", 230)
@@ -282,6 +287,7 @@ class Chart {
       .attr("align", "left")
       .text("Speed   ")
       .append("input")
+      .attr("id", "slider_speed")
       .attr("type", "range")
       .attr("min", 5)
       .attr("max", 180)
@@ -293,6 +299,7 @@ class Chart {
       .attr("align", "left")
       .text("Generation   ")
       .append("input")
+      .attr("id", "slider_generation")
       .attr("type", "range")
       .attr("min", 1)
       .attr("max", 6)
@@ -300,20 +307,21 @@ class Chart {
       .attr("value", 1)
       .on("input", slided);
 
-    function slided(d) {
-      // console.log(d3.select(this).property("value"));
-    }
-
     // Reference to the chart so we can pass it down.
     var cha = this;
-    
-    function slided_attack(d) {
-      var slideValue = d3.select(this).property("value");
-      // console.log(slideValue);
-      cha.draw_pkmn_evols()
-      // this.data_points.selectAll("circle")
-        // .attr("visibility", p => (p.Attack < slideValue) ? "hidden" : "visible");
+
+    function slided(d) {
+      // console.log(d3.select(this).property("value"));
+      cha.draw_pkmn_evols();
     }
+    
+    // function slided_attack(d) {
+      // var slideValue = d3.select(this).property("value");
+      // console.log(slideValue);
+      // cha.draw_pkmn_evols();
+      //this.data_points.selectAll("circle")
+      //  .attr("visibility", p => (p.Attack < slideValue) ? "hidden" : "visible");
+    // }
 
     var filterArea = d3.select("#filters-container") // this.svg.append("div") //
     var filters = filterArea.selectAll("filter")
@@ -600,7 +608,41 @@ class Chart {
       return 256;
     }
     
-    var sliderattack = d3.select("#slider_attack");
+    function visibility_sliders(d) {
+      var slider_total = d3.select("#slider_total").property("value");
+      if(d.Total < slider_total) return "hidden";
+      
+      
+      // var slider_hp = d3.select("#slider_hp").property("value");
+      // if(d.HP < slider_hp) return "hidden";
+      
+      
+      // var slider_attack = d3.select("#slider_attack").property("value");
+      // if(d.Attack < slider_attack) return "hidden";
+      
+      
+      // var slider_defense = d3.select("#slider_defense").property("value");
+      // if(d.Defense < slider_defense) return "hidden";
+      
+      
+      // var slider_spatk = d3.select("#slider_spatk").property("value");
+      // if(d.Sp_Atk < slider_spatk) return "hidden";
+      
+      
+      // var slider_spdef = d3.select("#slider_spdef").property("value");
+      // if(d.Sp_Def < slider_spdef) return "hidden";
+      
+      
+      // var slider_speed = d3.select("#slider_speed").property("value");
+      // if(d.Speed < slider_speed) return "hidden";
+      
+      
+      // var slider_generation = d3.select("#slider_generation").property("value");
+      // if(d.Generation < slider_generation) return "hidden";
+      
+      
+      return "visible";
+    }
 
     // Draw Pokémon
     if(pointSize <= 5) {  // Use circles
@@ -609,7 +651,7 @@ class Chart {
         .attr("visibility", "hidden")
       this.data_points.selectAll("circle")
         .transition(t)
-        .attr("visibility", p => (p.Attack < sliderattack.property("value")) ? "hidden" : "visible")
+        .attr("visibility", visibility_sliders)
         .attr("cx", p => this.getXpos(p, pointSize))
         .attr("cy", p => this.getYpos(p, pointSize))
         .attr("r", pointSize)
@@ -619,7 +661,7 @@ class Chart {
         .attr("visibility", "hidden")
       this.data_points.selectAll("image")
         .transition(t)
-        .attr("visibility", "visible")
+        .attr("visibility", visibility_sliders)
         .attr("x", p => this.getXpos(p, 5 * pointSize))
         .attr("y", p => this.getYpos(p, 5 * pointSize))
         .attr("width", 5 * Math.round(pointSize))
