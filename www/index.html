@@ -15,7 +15,7 @@
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="modal.css">
-  
+
   <!-- External scripts -->
   <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
 
@@ -29,7 +29,7 @@
 
 </head>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="50" onLoad="scrollTo('picker')">
+<body data-spy="scroll" data-target=".navbar" data-offset="50" /*onLoad="scrollTo('picker')" */>
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg fixed-top navbar-custom" id="navbar">
@@ -131,15 +131,14 @@
   <div class="modal" id="tuto4" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Tutorial IV - The Filters</h5>
+        <h5 class="modal-title" id="modalLabel">Tutorial IV - How to read</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
-        For the moment, the view is a bit bulky. That's because we display about 700 pokemon and 360 evolutions.
-        You can remove some points by applying "Filters", and only keep those you are interested in.
-        For example, try to keep only the legendary Pokémons.
+        Each point you see is a Pokémon. If you zoom, you will see their images. The color of each point corresponds to the
+        main type of the Pokémon (red for Fire, light green for Grass,...). Each arrow that leaves from a pokémon goes to its evolution(s).
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto3">Previous</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -148,19 +147,19 @@
       </div>
     </div>
   </div>
-
   <div class="modal" id="tuto5" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Tutorial V - The color</h5>
+        <h5 class="modal-title" id="modalLabel">Tutorial V - Filters</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
-        When you are too far, the Pokémons are displayed as small colored circles.
-        By default, the color depends on the primary type of the Pokémon. You can chose
-        another colouring condition by selecting the "Third Axis" tool.
+        The current view is bulky, isn't it? That's because we display more than 300 evolutions and 700 Pokémons. On the right,
+        you can select filters to reduce the number displayed. For example, try to only select the Legendary Pokémons.
+        <br>
+        <b>Note: </b> The filters are still in Beta, and may not work. Please excuse us for the inconvenience.
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto4">Previous</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
