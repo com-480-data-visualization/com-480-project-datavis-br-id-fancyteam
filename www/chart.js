@@ -288,7 +288,7 @@ class Chart {
     var filterArea = d3.select("#chart-container") // this.svg.append("div") //
     var filters = filterArea.selectAll("filter")
       .data(columns.filter(c => {
-        return pokemons[3][c] != parseFloat(pokemons[3][c])
+        return pokemons[0][c] != parseFloat(pokemons[0][c])
       }))
       .enter()
       .append("div")
