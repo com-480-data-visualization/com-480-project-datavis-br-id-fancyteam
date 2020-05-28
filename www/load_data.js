@@ -16,3 +16,6 @@ d3.csv(data_url).then(function(data) {
   // chart.updateChart();
   //tabulate(columns);
 });
+
+const observer = lozad();
+observer.observe();
