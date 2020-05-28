@@ -25,7 +25,7 @@
 **80% of the final grade**
 
 ### Process book
-The process book is [available here](./processbook/processbook.pdf).
+The process book is [available here](./milestones-report/milestone3/milestone3.pdf).
 
 ### How to install
 Simply put the content of the [www](./www/) folder anywhere in a thing that can be used as a web server. Wan' have a quick look? Try `cd www/` then `python3 -m http.server`, and visit [http://localhost:8000/](http://localhost:8000) in your favorite browser!

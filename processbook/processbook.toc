@@ -1,6 +1,0 @@
-\contentsline {section}{\numberline {1}Debriefing}{1}{section.1}% 
-\contentsline {section}{\numberline {2}Research}{1}{section.2}% 
-\contentsline {section}{\numberline {3}Analysis}{1}{section.3}% 
-\contentsline {section}{\numberline {4}Ideation}{1}{section.4}% 
-\contentsline {section}{\numberline {5}Development}{1}{section.5}% 
-\contentsline {section}{\numberline {6}Evaluation}{1}{section.6}% 
