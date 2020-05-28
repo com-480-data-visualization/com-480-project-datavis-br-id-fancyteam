@@ -2,7 +2,8 @@ class Chart {
   constructor(options) {
     this.width = options.width;
     this.height = options.height;
-    this.idleBrushDelay = 350; // milliseconds, delay to double click, otherwise the brush is triggered to zoom
+    this.idleBrushDelay =
+    350; // milliseconds, delay to double click, otherwise the brush is triggered to zoom
 
     // The whole chart area, i.e. plot, axis, filters, ...
     this.svg = d3.select("#chart-container").append("svg")
@@ -25,13 +26,18 @@ class Chart {
         var s = d3.event.selection;
         if (!s) {
           if (!idleBrushTimeout) {
-            return idleBrushTimeout = setTimeout(idled, this.idleBrushDelay);
+            return idleBrushTimeout = setTimeout(idled, this
+            .idleBrushDelay);
           }
           this.x.domain(this.x0);
           this.y.domain(this.y0);
         } else {
-          this.x.domain([s[0][0] - plot_margin.left, s[1][0] - plot_margin.left].map(this.x.invert, this.x));
-          this.y.domain([s[1][1] - plot_margin.top, s[0][1] - plot_margin.top].map(this.y.invert, this.y));
+          this.x.domain([s[0][0] - plot_margin.left, s[1][0] - plot_margin
+            .left
+          ].map(this.x.invert, this.x));
+          this.y.domain([s[1][1] - plot_margin.top, s[0][1] - plot_margin
+            .top
+          ].map(this.y.invert, this.y));
           this.svg.select(".brush").call(this.brush.move, null);
         }
         this.draw();
@@ -41,7 +47,8 @@ class Chart {
       .call(this.brush)
     this.svg.append("text")
       .attr("class", "instructions")
-      .attr("transform", "translate(" + plot_margin.left + "," + (this.height - 5) + ")")
+      .attr("transform", "translate(" + plot_margin.left + "," + (this
+        .height - 5) + ")")
       .text('Click and drag above to zoom, double click to reset view');
 
     function idled() {
@@ -74,7 +81,8 @@ class Chart {
     this.xAxis = d3.axisBottom(this.x).ticks(plot_width / 40);
     this.svg.append("g")
       .attr("class", "x_axis")
-      .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin.top + plot_height) + ")")
+      .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin
+        .top + plot_height) + ")")
       .call(this.xAxis);
 
     // Create the dropdown for the X axis
@@ -83,19 +91,20 @@ class Chart {
       .attr("id", "xaxisselect")
       .attr("xAxis_label", "xAxis_label")
       .on('change', onChangeXAxis)
-    this.xAxisButton.selectAll('options') // Next 4 lines add 6 options = 6 colors
+    this.xAxisButton.selectAll(
+      'options') // Next 4 lines add 6 options = 6 colors
       .data(columns)
       .enter()
       .append('option')
       .text(text => text)
-      .attr("value", function (d) {
+      .attr("value", function(d) {
         return d;
       })
-      /*.on("change", function (d) {
-        var new_value = d3.select(this).property("value")
-        console.log(new_value);
-        updateChart(new_value, y_field, color_field);
-      })*/
+    /*.on("change", function (d) {
+      var new_value = d3.select(this).property("value")
+      console.log(new_value);
+      updateChart(new_value, y_field, color_field);
+    })*/
 
     // Reference to the chart so we can pass it down.
     var cha = this;
@@ -114,21 +123,24 @@ class Chart {
     this.xAxisTop = d3.axisTop(this.x).tickValues([]);
     this.svg.append("g")
       .attr("class", "x_axis")
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
+        .top + ")")
       .call(this.xAxisTop);
 
     // Y axis
     this.yAxis = d3.axisLeft(this.y).ticks(plot_height / 20);
     this.svg.append("g")
       .attr("class", "y_axis")
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
+        .top + ")")
       .call(this.yAxis);
 
     // Y right axis (just the line)
     this.yAxisRight = d3.axisRight(this.y).tickValues([]);
     this.svg.append("g")
       .attr("class", "y_axis")
-      .attr("transform", "translate(" + (plot_margin.left + plot_width) + "," + plot_margin.top + ")")
+      .attr("transform", "translate(" + (plot_margin.left + plot_width) +
+        "," + plot_margin.top + ")")
       .call(this.yAxisRight);
 
     // complicated, but only defines arrow heads as "id=end"
@@ -146,7 +158,8 @@ class Chart {
       .attr("d", "M0,-5L10,0L0,5");
   }
 
-  updateChart(x_field = columns[7], y_field = columns[7], color_field = columns[2]) {
+  updateChart(x_field = columns[7], y_field = columns[7], color_field = columns[
+    2]) {
     this.x_field = x_field;
     this.y_field = y_field;
     this.color_field = color_field;
@@ -192,7 +205,8 @@ class Chart {
     // Update and center the label for the X axis
     function updateAxisX(lbl) {
       this.svg.append("text")
-        .attr("transform", "translate(" + (plot_margin.left + plot_width / 2) + " ," + (chart.height - 5) + ")")
+        .attr("transform", "translate(" + (plot_margin.left + plot_width /
+          2) + " ," + (chart.height - 5) + ")")
         .style("text-anchor", "middle")
         .text(lbl);
     }
@@ -200,7 +214,8 @@ class Chart {
     // Update and center the label for the Y axis
     function updateAxisY(lbl) {
       this.svg.append("text")
-        .attr("transform", "translate(" + (plot_margin.left - 40) + " ," + (plot_margin.top + plot_height / 2) + ") rotate(-90)")
+        .attr("transform", "translate(" + (plot_margin.left - 40) + " ," + (
+          plot_margin.top + plot_height / 2) + ") rotate(-90)")
         .style("text-anchor", "middle")
         .text(lbl);
     }
@@ -216,7 +231,7 @@ class Chart {
 
     this.draw_init();
 
-    var filterArea = d3.select("#chart-container")//this.svg.append("g")
+    var filterArea = d3.select("#chart-container") //this.svg.append("g")
     var filters = filterArea.selectAll("filter")
       .data(columns)
       .enter()
@@ -224,7 +239,8 @@ class Chart {
     var filter_labels = filters.append("text")
       .attr("class", "filter_label")
       .attr("x", plot_width + plot_margin.left + plot_margin.right)
-      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (columns.length + 1))))
+      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
+        columns.length + 1))))
       .attr("width", 30)
       .attr("height", this.height / columns.length)
       .text(t => t)
@@ -232,20 +248,23 @@ class Chart {
       .attr("font-size", "17px")
       .attr("fill", "black")
     var filter_fields = filters.append('select')
-      .attr("id", c => ("filter_by_" + c ))
+      .attr("id", c => ("filter_by_" + c))
       .attr("class", "filter_text_option")
       .attr("multiple", "")
       .attr("name", c => c)
       .attr("x", plot_width + plot_margin.left + plot_margin.right + 30)
-      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (columns.length + 1))))
+      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
+        columns.length + 1))))
       .attr("width", 30)
       .attr("height", this.height / columns.length)
       .attr("transform", c => ("translate(" +
         (plot_width + plot_margin.left + plot_margin.right + 60) + " ," +
-        (plot_margin.top + (columns.indexOf(c) * this.height / (columns.length + 1))) + ")"))
+        (plot_margin.top + (columns.indexOf(c) * this.height / (columns
+          .length + 1))) + ")"))
       .selectAll('options')
-      .data(c => Array.from(new Set(pokemons.map(p => p[c]))).sort((c1, c2) => {
-        if(c1 == parseFloat(c1) || c2 == parseFloat(c2)) {
+      .data(c => Array.from(new Set(pokemons.map(p => p[c]))).sort((c1,
+      c2) => {
+        if (c1 == parseFloat(c1) || c2 == parseFloat(c2)) {
           return c1 - c2;
         } else {
           return c1.localeCompare(c2)
@@ -265,6 +284,7 @@ class Chart {
 
     // define tooltip for local usage (necessary)
     var tooltip = this.tooltip
+
     function display_tooltip(d) {
       tooltip.transition() // show tooltip
         .duration(200)
@@ -282,7 +302,8 @@ class Chart {
       .style("stroke", p => {
         return "#000";
       })
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
+        .top + ")")
       .attr("marker-end", "url(#end)") // arrow heads
       .attr("source-pt", p => p.source)
       .attr("target-pt", p => p.target)
@@ -299,22 +320,25 @@ class Chart {
       .attr("r", pointSize)
       .attr("id", p => p.Id)
       .attr("fill", p => {
-        if (typeToColor.get(p[this.color_field])) return typeToColor.get(p[this.color_field]);
+        if (typeToColor.get(p[this.color_field])) return typeToColor.get(p[
+          this.color_field]);
         return typeToColor.get("???");
       })
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
+        .top + ")")
       .on("click", p => console.log(p))
-      .on("mouseover", function (d) {
+      .on("mouseover", function(d) {
         //put "hovered-other" class to all
         circles.classed("hovered-other", true)
         //then remove and put "hovered-this" for hovered
         d3.select(this).classed("hovered-other", false)
         // add class "hovered-other" to all links
-        links.classed("hovered-over", p => (p.target == d.Id || p.source == d.Id))
+        links.classed("hovered-over", p => (p.target == d.Id || p.source ==
+          d.Id))
 
         display_tooltip(d)
       })
-      .on("mouseout", function (d) {
+      .on("mouseout", function(d) {
         // remove all classes
         circles.classed("hovered-other", false)
         links.classed("hovered-over", false)
@@ -338,16 +362,18 @@ class Chart {
       .attr("y", p => this.y(p[this.y_field]) - pointSize / 2)
       .attr("width", Math.round(pointSize))
       .attr("height", Math.round(pointSize))
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")")
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
+        .top + ")")
       .on("click", p => console.log(p))
-      .on("mouseover", function (d) {
+      .on("mouseover", function(d) {
         display_tooltip(d);
         images.classed("hovered-other", true)
-        links.classed("hovered-over", p => (p.target == d.Id || p.source == d.Id))
+        links.classed("hovered-over", p => (p.target == d.Id || p.source ==
+          d.Id))
         d3.select(this).classed("hovered-other", false).moveToFront()
 
       })
-      .on("mouseout", function (d) {
+      .on("mouseout", function(d) {
         hide_tooltip();
         links.classed("hovered-over", false)
         images.classed("hovered-other", false)

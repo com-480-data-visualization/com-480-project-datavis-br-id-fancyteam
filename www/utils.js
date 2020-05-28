@@ -1,5 +1,6 @@
 // We are getting informations from here
-const data_url = 'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/www/data/pokemon001-721.csv'
+const data_url =
+  'https://raw.githubusercontent.com/com-480-data-visualization/com-480-project-datavis-br-id-fancyteam/master/www/data/pokemon001-721.csv'
 // Basic parameters for the chart
 const plot_height = window.innerHeight * 0.65;
 const plot_width = window.innerWidth * 0.70;
@@ -1476,7 +1477,7 @@ const evolutions = [{
 
 // pad a string with `padString` until il reaches length `length`
 // e.g. "3".lpad("0", 5) --> "00003"
-String.prototype.lpad = function (padString, length) {
+String.prototype.lpad = function(padString, length) {
   var str = this;
   while (str.length < length)
     str = padString + str;
@@ -1499,8 +1500,8 @@ function addressMake(p, size) {
   return base + id + ext;
 }
 
-d3.selection.prototype.moveToFront = function () {
-  return this.each(function () {
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function() {
     this.parentNode.appendChild(this);
   });
 };

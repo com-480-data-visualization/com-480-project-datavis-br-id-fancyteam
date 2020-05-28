@@ -5,6 +5,10 @@ function createFilter(c) {
     .data(columns)
     .enter()
     .append('option')
-    .text(function (d) { return d; })
-    .attr("value", function (d) { return d; }) // corresponding value returned by the button
+    .text(function(d) {
+      return d;
+    })
+    .attr("value", function(d) {
+      return d;
+    }) // corresponding value returned by the button
 }
