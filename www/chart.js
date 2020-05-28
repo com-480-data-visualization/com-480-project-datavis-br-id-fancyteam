@@ -79,7 +79,7 @@ class Chart {
     this.x = d3.scaleLinear().domain(this.x0).range([0, plot_width]);
     this.y0 = [this.minY, this.maxY];
     this.y = d3.scaleLinear().domain(this.y0).range([plot_height, 0]);
-      
+
     // Reference to the chart so we can pass it down.
     var cha = this;
 
@@ -97,7 +97,7 @@ class Chart {
       .attr("id", "xaxisselect")
       .attr("xAxis_label", "xAxis_label")
       .on('change', onChangeXAxis)
-    
+
     this.xAxisButton.selectAll(
       'options') // Next 4 lines add 6 options = 6 colors
       .data(columns)
@@ -133,14 +133,14 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
         .top + ")")
       .call(this.yAxis);
-      
+
     // Create the dropdown for the Y axis
     this.yAxisButton = d3.select("#chart-container")
       .append('select')
       .attr("id", "yaxisselect")
       .attr("yAxis_label", "yAxis_label")
       .on('change', onChangeYAxis)
-    
+
     this.yAxisButton.selectAll(
       'options') // Next 4 lines add 6 options = 6 colors
       .data(columns)
@@ -168,7 +168,7 @@ class Chart {
         "," + plot_margin.top + ")")
       .call(this.yAxisRight);
     /* End Y axis */
-    
+
     // TODO color axis
 
     // complicated, but only defines arrow heads as "id=end"
@@ -179,8 +179,8 @@ class Chart {
       .attr("viewBox", "0 -5 10 10")
       .attr("refX", 15)
       .attr("refY", 0.5)
-      .attr("markerWidth", 10)
-      .attr("markerHeight", 10)
+      .attr("markerWidth", 5)
+      .attr("markerHeight", 5)
       .attr("orient", "auto")
       .append("svg:path")
       .attr("d", "M0,-5L10,0L0,5");
@@ -191,7 +191,7 @@ class Chart {
     this.x_field = columns[7];  // Base value, Defense
     this.y_field = columns[6];  // Base value, Attack
     this.color_field = columns[2];  // Base value, Type_1
-    
+
     // Filters stuff.
     var filterArea = d3.select("#chart-container") //this.svg.append("g")
     var filters = filterArea.selectAll("filter")
@@ -246,7 +246,7 @@ class Chart {
     this.data_points = this.svg.append('g')
       .attr('class', 'data_points')
       .attr('clip-path', 'url(#clip)');
-      
+
     // Define links between evolutions (the lil' arrows).
     this.links = this.data_points.selectAll("line")
       .data(evolutions)
@@ -260,11 +260,11 @@ class Chart {
       .attr("marker-end", "url(#end)") // arrow heads
       .attr("source-pt", p => p.source)
       .attr("target-pt", p => p.target)
-    
+
     // Finally, update the chart
     this.chart_update(this.x_field, this.y_field, this.color_field)
   }
-  
+
   /* Used to update the chart when for instance a label is changed. */
   chart_update(x_field = columns[7], y_field = columns[6], color_field = columns[
     2]) {
@@ -301,7 +301,7 @@ class Chart {
         }
       }
     });
-    
+
     this.maxX = maxXPoint + 5;
     this.minX = minXPoint - 5;
     this.maxY = maxYPoint + 5;
@@ -329,7 +329,7 @@ class Chart {
         .style("text-anchor", "middle")
         .text(lbl);
     }
-      
+
     // Initialization of the Pkmn values
     this.init_pkmn();
 
@@ -344,13 +344,13 @@ class Chart {
     this.points = d3.range(pokemonCount).map(i => {
       return pokemons[i]
     });
-    
+
     // Reference to the chart so we can pass it down.
     var cha = this;
 
     // Point size. Duh.
     var pointSize = (this.x(1) - this.x(0)) / 2;
-    
+
     // Compulsory local variable for links.
     var links = this.links;
 
@@ -416,11 +416,11 @@ class Chart {
         links.classed("hovered-over", false)
         images.classed("hovered-other", false)
       });
-      
+
     /* Tooltip */
     // Define a tooltip variable for local usage (necessary)(because js)
     var tooltip = this.tooltip
-    
+
     function formatPokemon(d) {
       var rtn = "";
       rtn += "#" + d.Id + " " + d.Name + "<br/>";
@@ -437,13 +437,13 @@ class Chart {
       tooltip.transition()
         .duration(200)
         .style("opacity", .9);
-        
+
       // Change text and position it close to mouse
       tooltip.html(formatPokemon(d))
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
     }
-    
+
     // Hide tooltip
     function hide_tooltip() {
       tooltip.transition()
@@ -470,23 +470,22 @@ class Chart {
       return this.y(p[this.y_field]) - pointSize / 2
     }
   }
-  
+
   /* Draw the points and the evolutions */
   draw_pkmn_evols() {  // Everything is in memory, not optimal.
     var t = this.svg.transition().duration(750);
     var pointSize = (this.x(1) - this.x(0)) / 2;
-
     // Axis
     this.svg.select(".x_axis").transition(t).call(this.xAxis);
     this.svg.select(".y_axis").transition(t).call(this.yAxis);
-    
+
     // We have multiple sets of PNGs to use.
     function sizeToPixel(pointSize) {
       if(pointSize <= 16) return 32;
       if(pointSize <= 32) return 120;
       return 256;
     }
-    
+
     // Draw Pokémon
     if(pointSize <= 5) {  // Use circles
       this.data_points.selectAll("image")
@@ -542,6 +541,7 @@ class Chart {
             return this.getYpos(this.points[i], pointSize)
           }
         }
-      });
+      })
+      .attr("stroke-width", pointSize/4);
   }
 }
