@@ -114,7 +114,7 @@ class Chart {
     // Update on X axis dropdown
     function onChangeXAxis() {
       var selectValue = d3.select('#xaxisselect').property("value");
-      cha.updateChart(selectValue, cha.y_field, cha.color_field)
+      cha.chart_update(selectValue, cha.y_field, cha.color_field)
     }
 
     // X top axis (just the line)
@@ -157,7 +157,7 @@ class Chart {
     // Update on Y axis dropdown
     function onChangeYAxis() {
       var selectValue = d3.select('#yaxisselect').property("value");
-      cha.updateChart(cha.x_field, selectValue, cha.color_field)
+      cha.chart_update(cha.x_field, selectValue, cha.color_field)
     }
 
     // Y right axis (just the line)
@@ -168,6 +168,8 @@ class Chart {
         "," + plot_margin.top + ")")
       .call(this.yAxisRight);
     /* End Y axis */
+    
+    // TODO color axis
 
     // complicated, but only defines arrow heads as "id=end"
     this.svg.append("svg:defs").selectAll("marker")
@@ -184,17 +186,62 @@ class Chart {
       .attr("d", "M0,-5L10,0L0,5");
   }
 
+  /* Initialization of the chart with default values. Called once. */
   chart_init() {
-    this.x_field = columns[7];  // 
-    this.y_field = columns[6];  // 
-    this.color_field = columns[2];  // 
+    this.x_field = columns[7];  // Base value, Defense
+    this.y_field = columns[6];  // Base value, Attack
+    this.color_field = columns[2];  // Base value, Type_1
     
+    // Filters stuff.
+    var filterArea = d3.select("#chart-container") //this.svg.append("g")
+    var filters = filterArea.selectAll("filter")
+      .data(columns)
+      .enter()
+      .append("g")
+    var filter_labels = filters.append("text")
+      .attr("class", "filter_label")
+      .attr("x", plot_width + plot_margin.left + plot_margin.right)
+      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
+        columns.length + 1))))
+      .attr("width", 30)
+      .attr("height", this.height / columns.length)
+      .text(t => t)
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "17px")
+      .attr("fill", "black")
+    var filter_fields = filters.append('select')
+      .attr("id", c => ("filter_by_" + c))
+      .attr("class", "filter_text_option")
+      .attr("multiple", "")
+      .attr("name", c => c)
+      .attr("x", plot_width + plot_margin.left + plot_margin.right + 30)
+      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
+        columns.length + 1))))
+      .attr("width", 30)
+      .attr("height", this.height / columns.length)
+      .attr("transform", c => ("translate(" +
+        (plot_width + plot_margin.left + plot_margin.right + 60) + " ," +
+        (plot_margin.top + (columns.indexOf(c) * this.height / (columns
+          .length + 1))) + ")"))
+      .selectAll('options')
+      .data(c => Array.from(new Set(pokemons.map(p => p[c]))).sort((c1,
+      c2) => {
+        if (c1 == parseFloat(c1) || c2 == parseFloat(c2)) {
+          return c1 - c2;
+        } else {
+          return c1.localeCompare(c2)
+        }
+      }))
+      .enter()
+      .append('option')
+      .text(p => p)
+      .attr("value", p => p)
     
     // Finally, update the chart
-    this.updateChart(this.x_field, this.y_field, this.color_field)
+    this.chart_update(this.x_field, this.y_field, this.color_field)
   }
   
-  updateChart(x_field = columns[7], y_field = columns[6], color_field = columns[
+  chart_update(x_field = columns[7], y_field = columns[6], color_field = columns[
     2]) {
     this.x_field = x_field;
     this.y_field = y_field;
@@ -206,6 +253,7 @@ class Chart {
     let maxYPoint = 0;
     let minYPoint = 1000;
 
+    // For each Pokémon, place a point according to its fields.
     pokemons.forEach(pokemon => {
       for (let field in pokemon) {
         if (pokemon.hasOwnProperty(field) && field == x_field) {
@@ -289,6 +337,8 @@ class Chart {
     }
 
     var pointSize = (this.x(1) - this.x(0)) / 2;
+    
+    // Define links between evolutions (the lil' arrows).
     this.links = this.data_points.selectAll("line")
       .data(evolutions)
       .enter().append("line")
@@ -304,7 +354,7 @@ class Chart {
 
     var links = this.links;
 
-    // Add pokemons' points
+    // Add Pokémon' points
     const circles = this.data_points.selectAll("circle")
       .data(this.points)
       .enter().append("circle")
@@ -338,9 +388,6 @@ class Chart {
         links.classed("hovered-over", false)
         hide_tooltip()
       });
-
-
-
 
     // Add pokemons' images
     function hide_tooltip() {
