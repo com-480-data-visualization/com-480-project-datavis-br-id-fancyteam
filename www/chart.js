@@ -65,7 +65,6 @@ class Chart {
       .attr("height", plot_height)
       .attr("x", plot_margin.left)
       .attr("y", plot_margin.top);
-
   }
 
   /* Create the original axis. Call once. */
@@ -261,7 +260,6 @@ class Chart {
       .attr("marker-end", "url(#end)") // arrow heads
       .attr("source-pt", p => p.source)
       .attr("target-pt", p => p.target)
-
     
     // Finally, update the chart
     this.chart_update(this.x_field, this.y_field, this.color_field)
@@ -346,31 +344,11 @@ class Chart {
     this.points = d3.range(pokemonCount).map(i => {
       return pokemons[i]
     });
-
-    /* Tooltip */
-    // Define a tooltip variable for local usage (necessary)(because js)
-    var tooltip = this.tooltip
-
-    // Show tooltip
-    function display_tooltip(d) {
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", .9);
-        
-      // Change text and position it close to mouse
-      tooltip.html(d.Name)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
-    }
     
-    // Hide tooltip
-    function hide_tooltip() {
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", 0)
-    }
-    /* End Tooltip */
+    // Reference to the chart so we can pass it down.
+    var cha = this;
 
+    // Point size. Duh.
     var pointSize = (this.x(1) - this.x(0)) / 2;
     
     // Compulsory local variable for links.
@@ -438,6 +416,41 @@ class Chart {
         links.classed("hovered-over", false)
         images.classed("hovered-other", false)
       });
+      
+    /* Tooltip */
+    // Define a tooltip variable for local usage (necessary)(because js)
+    var tooltip = this.tooltip
+    
+    function formatPokemon(d) {
+      var rtn = "";
+      rtn += "#" + d.Id + " " + d.Name + "<br/>";
+      rtn += d.Type_1;
+      if(d.Type_2) rtn += "/" + d.Type_2;
+      rtn += "<br/>"
+      rtn += cha.x_field + ": " + d[cha.x_field] + "<br/>"
+      rtn += cha.y_field + ": " + d[cha.y_field] + "<br/>"
+      return rtn
+    }
+
+    // Show tooltip
+    function display_tooltip(d) {
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", .9);
+        
+      // Change text and position it close to mouse
+      tooltip.html(formatPokemon(d))
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+    }
+    
+    // Hide tooltip
+    function hide_tooltip() {
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 0)
+    }
+    /* End Tooltip */
   }
 
   // Offset function
