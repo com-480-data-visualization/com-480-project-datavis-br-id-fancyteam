@@ -98,9 +98,8 @@ class Chart {
       .attr("xAxis_label", "xAxis_label")
       .on('change', onChangeXAxis)
 
-    this.xAxisButton.selectAll(
-      'options') // Next 4 lines add 6 options = 6 colors
-      .data(columns)
+    this.xAxisButton.selectAll('options')
+      .data(columns.slice(4, -2))  // We do not want "special" values such as string and bool
       .enter()
       .append('option')
       .text(text => text)
@@ -115,6 +114,7 @@ class Chart {
     function onChangeXAxis() {
       var selectValue = d3.select('#xaxisselect').property("value");
       cha.chart_update(selectValue, cha.y_field, cha.color_field)
+      console.log(columns);
     }
 
     // X top axis (just the line)
@@ -141,9 +141,8 @@ class Chart {
       .attr("yAxis_label", "yAxis_label")
       .on('change', onChangeYAxis)
 
-    this.yAxisButton.selectAll(
-      'options') // Next 4 lines add 6 options = 6 colors
-      .data(columns)
+    this.yAxisButton.selectAll('options')
+      .data(columns.slice(4, -2))  // We do not want "special" values such as string and bool
       .enter()
       .append('option')
       .text(text => text)
