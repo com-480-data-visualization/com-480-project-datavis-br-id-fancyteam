@@ -193,9 +193,95 @@ class Chart {
     this.color_field = columns[2];  // Base value, Type_1
 
     // Filters stuff.
+    var slider_total = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("Total   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 180)
+      .attr("max", 780)
+      .attr("step", 1)
+      .on("input", slided);
+
+    var slider_hp = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("HP   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 1)
+      .attr("max", 255)
+      .attr("step", 1)
+      .on("input", slided);
+
+    var slider_attack = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("Attack   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 5)
+      .attr("max", 190)
+      .attr("step", 1)
+      .on("input", slided);
+
+    var slider_defense = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("Defense   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 5)
+      .attr("max", 230)
+      .attr("step", 1)
+      .on("input", slided);
+
+    var slider_spatk = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("Sp_Atk   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 10)
+      .attr("max", 194)
+      .attr("step", 1)
+      .on("input", slided);
+
+    var slider_spdef = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("Sp_Def   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 20)
+      .attr("max", 230)
+      .attr("step", 1)
+      .on("input", slided);
+
+    var slider_speed = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("Speed   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 5)
+      .attr("max", 180)
+      .attr("step", 1)
+      .on("input", slided);
+
+    var slider_generation = d3.select("#chart-container").append("p")
+      .attr("align", "right")
+      .text("Generation   ")
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 1)
+      .attr("max", 6)
+      .attr("step", 1)
+      .on("input", slided);
+
+    function slided(d) {
+      //console.log(d3.select(this).property("value"));
+    }
+
     var filterArea = d3.select("#chart-container") // this.svg.append("div") //
     var filters = filterArea.selectAll("filter")
-      .data(columns)
+      .data(columns.filter(c => {
+        return pokemons[3][c] != parseFloat(pokemons[3][c])
+      }))
       .enter()
       .append("div")
       .attr("align", "right")
