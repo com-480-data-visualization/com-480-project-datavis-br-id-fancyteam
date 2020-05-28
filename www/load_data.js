@@ -12,7 +12,7 @@ d3.csv(data_url).then(function(data) {
       filter_width,
     height: plot_height + plot_margin.top + plot_margin.bottom,
   });
-  // chart.chart_init();
-  chart.updateChart();
+  chart.chart_init();
+  // chart.updateChart();
   //tabulate(columns);
 });

@@ -184,6 +184,16 @@ class Chart {
       .attr("d", "M0,-5L10,0L0,5");
   }
 
+  chart_init() {
+    this.x_field = columns[7];  // 
+    this.y_field = columns[6];  // 
+    this.color_field = columns[2];  // 
+    
+    
+    // Finally, update the chart
+    this.updateChart(this.x_field, this.y_field, this.color_field)
+  }
+  
   updateChart(x_field = columns[7], y_field = columns[6], color_field = columns[
     2]) {
     this.x_field = x_field;
@@ -218,6 +228,7 @@ class Chart {
         }
       }
     });
+    
     this.maxX = maxXPoint + 5;
     this.minX = minXPoint - 5;
     this.maxY = maxYPoint + 5;
@@ -246,6 +257,7 @@ class Chart {
         .text(lbl);
     }
 
+    // Tooltip
     this.tooltip = d3.select("body").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
@@ -256,50 +268,6 @@ class Chart {
       .attr('clip-path', 'url(#clip)');
 
     this.draw_init();
-
-    var filterArea = d3.select("#chart-container") //this.svg.append("g")
-    var filters = filterArea.selectAll("filter")
-      .data(columns)
-      .enter()
-      .append("g")
-    var filter_labels = filters.append("text")
-      .attr("class", "filter_label")
-      .attr("x", plot_width + plot_margin.left + plot_margin.right)
-      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
-        columns.length + 1))))
-      .attr("width", 30)
-      .attr("height", this.height / columns.length)
-      .text(t => t)
-      .attr("font-family", "sans-serif")
-      .attr("font-size", "17px")
-      .attr("fill", "black")
-    var filter_fields = filters.append('select')
-      .attr("id", c => ("filter_by_" + c))
-      .attr("class", "filter_text_option")
-      .attr("multiple", "")
-      .attr("name", c => c)
-      .attr("x", plot_width + plot_margin.left + plot_margin.right + 30)
-      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
-        columns.length + 1))))
-      .attr("width", 30)
-      .attr("height", this.height / columns.length)
-      .attr("transform", c => ("translate(" +
-        (plot_width + plot_margin.left + plot_margin.right + 60) + " ," +
-        (plot_margin.top + (columns.indexOf(c) * this.height / (columns
-          .length + 1))) + ")"))
-      .selectAll('options')
-      .data(c => Array.from(new Set(pokemons.map(p => p[c]))).sort((c1,
-      c2) => {
-        if (c1 == parseFloat(c1) || c2 == parseFloat(c2)) {
-          return c1 - c2;
-        } else {
-          return c1.localeCompare(c2)
-        }
-      }))
-      .enter()
-      .append('option')
-      .text(p => p)
-      .attr("value", p => p)
   }
 
   draw_init() {
