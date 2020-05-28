@@ -1,4 +1,5 @@
 class Chart {
+  /* Constructor for the Chart. Call once. */
   constructor(options) {
     this.width = options.width;
     this.height = options.height;
@@ -66,7 +67,9 @@ class Chart {
 
   }
 
+  /* Create the original axis. Call once. */
   createAxis() {
+    // Basic parameters
     this.maxX = 1000;
     this.minX = 0;
     this.maxY = 1000;
@@ -76,8 +79,11 @@ class Chart {
     this.x = d3.scaleLinear().domain(this.x0).range([0, plot_width]);
     this.y0 = [this.minY, this.maxY];
     this.y = d3.scaleLinear().domain(this.y0).range([plot_height, 0]);
+      
+    // Reference to the chart so we can pass it down.
+    var cha = this;
 
-    // X axis
+    /* X axis */
     this.xAxis = d3.axisBottom(this.x).ticks(plot_width / 40);
     this.svg.append("g")
       .attr("class", "x_axis")
@@ -91,6 +97,7 @@ class Chart {
       .attr("id", "xaxisselect")
       .attr("xAxis_label", "xAxis_label")
       .on('change', onChangeXAxis)
+    
     this.xAxisButton.selectAll(
       'options') // Next 4 lines add 6 options = 6 colors
       .data(columns)
@@ -100,23 +107,14 @@ class Chart {
       .attr("value", function(d) {
         return d;
       })
-    /*.on("change", function (d) {
-      var new_value = d3.select(this).property("value")
-      console.log(new_value);
-      updateChart(new_value, y_field, color_field);
-    })*/
+      .property("selected", function(d){  // Base option
+        return d === columns[7];
+      });
 
-    // Reference to the chart so we can pass it down.
-    var cha = this;
-
+    // Update on X axis dropdown
     function onChangeXAxis() {
       var selectValue = d3.select('#xaxisselect').property("value");
       cha.updateChart(selectValue, cha.y_field, cha.color_field)
-    }
-
-    function onChangeYAxis() {
-      var selectValue = d3.select('#xaxisselect').property("value");
-      cha.updateChart(cha.x_field, selectValue, cha.color_field)
     }
 
     // X top axis (just the line)
@@ -126,14 +124,41 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
         .top + ")")
       .call(this.xAxisTop);
+    /* End X axis */
 
-    // Y axis
+    /* Y axis */
     this.yAxis = d3.axisLeft(this.y).ticks(plot_height / 20);
     this.svg.append("g")
       .attr("class", "y_axis")
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
         .top + ")")
       .call(this.yAxis);
+      
+    // Create the dropdown for the Y axis
+    this.yAxisButton = d3.select("#chart-container")
+      .append('select')
+      .attr("id", "yaxisselect")
+      .attr("yAxis_label", "yAxis_label")
+      .on('change', onChangeYAxis)
+    
+    this.yAxisButton.selectAll(
+      'options') // Next 4 lines add 6 options = 6 colors
+      .data(columns)
+      .enter()
+      .append('option')
+      .text(text => text)
+      .attr("value", function(d) {
+        return d;
+      })
+      .property("selected", function(d){  // Base option
+        return d === columns[6];
+      });
+
+    // Update on Y axis dropdown
+    function onChangeYAxis() {
+      var selectValue = d3.select('#yaxisselect').property("value");
+      cha.updateChart(cha.x_field, selectValue, cha.color_field)
+    }
 
     // Y right axis (just the line)
     this.yAxisRight = d3.axisRight(this.y).tickValues([]);
@@ -142,6 +167,7 @@ class Chart {
       .attr("transform", "translate(" + (plot_margin.left + plot_width) +
         "," + plot_margin.top + ")")
       .call(this.yAxisRight);
+    /* End Y axis */
 
     // complicated, but only defines arrow heads as "id=end"
     this.svg.append("svg:defs").selectAll("marker")
@@ -158,7 +184,7 @@ class Chart {
       .attr("d", "M0,-5L10,0L0,5");
   }
 
-  updateChart(x_field = columns[7], y_field = columns[7], color_field = columns[
+  updateChart(x_field = columns[7], y_field = columns[6], color_field = columns[
     2]) {
     this.x_field = x_field;
     this.y_field = y_field;
@@ -398,6 +424,7 @@ class Chart {
       return this.y(p[this.y_field]) - pointSize / 2
     }
   }
+  
   draw() {
     var t = this.svg.transition().duration(750);
     var pointSize = (this.x(1) - this.x(0)) / 2;
