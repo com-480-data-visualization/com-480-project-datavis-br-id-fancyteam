@@ -193,18 +193,14 @@ class Chart {
     this.color_field = columns[2];  // Base value, Type_1
 
     // Filters stuff.
-    var filterArea = d3.select("#chart-container") //this.svg.append("g")
+    var filterArea = d3.select("#chart-container") // this.svg.append("div") //
     var filters = filterArea.selectAll("filter")
       .data(columns)
       .enter()
-      .append("g")
+      .append("div")
+      .attr("align", "right")
     var filter_labels = filters.append("text")
       .attr("class", "filter_label")
-      .attr("x", plot_width + plot_margin.left + plot_margin.right)
-      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
-        columns.length + 1))))
-      .attr("width", 30)
-      .attr("height", this.height / columns.length)
       .text(t => t)
       .attr("font-family", "sans-serif")
       .attr("font-size", "17px")
@@ -213,16 +209,6 @@ class Chart {
       .attr("id", c => ("filter_by_" + c))
       .attr("class", "filter_text_option")
       .attr("multiple", "")
-      .attr("name", c => c)
-      .attr("x", plot_width + plot_margin.left + plot_margin.right + 30)
-      .attr("y", c => (plot_margin.top + (columns.indexOf(c) * this.height / (
-        columns.length + 1))))
-      .attr("width", 30)
-      .attr("height", this.height / columns.length)
-      .attr("transform", c => ("translate(" +
-        (plot_width + plot_margin.left + plot_margin.right + 60) + " ," +
-        (plot_margin.top + (columns.indexOf(c) * this.height / (columns
-          .length + 1))) + ")"))
       .selectAll('options')
       .data(c => Array.from(new Set(pokemons.map(p => p[c]))).sort((c1,
       c2) => {
