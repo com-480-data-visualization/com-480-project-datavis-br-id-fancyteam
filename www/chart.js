@@ -405,6 +405,9 @@ class Chart {
     this.maxY = maxYPoint + 5;
     this.minY = minYPoint - 5;
 
+    this.minX = this.minX < 0 ? 0 : this.minX;
+    this.minY = this.minY < 0 ? 0 : this.minY;
+
     this.x0 = [this.minX, this.maxX];
     this.x.domain(this.x0);
     this.y0 = [this.minY, this.maxY];
