@@ -237,12 +237,13 @@ class Chart {
       .attr("align", "left")
       .text("Attack   ")
       .append("input")
+      .attr("id", "slider_attack")
       .attr("type", "range")
       .attr("min", 5)
       .attr("max", 190)
       .attr("step", 1)
       .attr("value", 5)
-      .on("input", slided);
+      .on("input", slided_attack);
 
     var slider_defense = d3.select("#filters-container").append("p")
       .attr("align", "left")
@@ -300,7 +301,18 @@ class Chart {
       .on("input", slided);
 
     function slided(d) {
-      console.log(d3.select(this).property("value"));
+      // console.log(d3.select(this).property("value"));
+    }
+
+    // Reference to the chart so we can pass it down.
+    var cha = this;
+    
+    function slided_attack(d) {
+      var slideValue = d3.select(this).property("value");
+      // console.log(slideValue);
+      cha.draw_pkmn_evols()
+      // this.data_points.selectAll("circle")
+        // .attr("visibility", p => (p.Attack < slideValue) ? "hidden" : "visible");
     }
 
     var filterArea = d3.select("#filters-container") // this.svg.append("div") //
@@ -587,20 +599,17 @@ class Chart {
       if(pointSize <= 32) return 120;
       return 256;
     }
+    
+    var sliderattack = d3.select("#slider_attack");
 
     // Draw Pokémon
     if(pointSize <= 5) {  // Use circles
       this.data_points.selectAll("image")
         .transition(t)
         .attr("visibility", "hidden")
-        .attr("x", p => this.getXpos(p, 5 * pointSize))
-        .attr("y", p => this.getYpos(p, 5 * pointSize))
-        .attr("width", 5 * Math.round(pointSize))
-        .attr("height", 5 * Math.round(pointSize))
-        .attr("xlink:href", p => addressMake(p, sizeToPixel(pointSize)))
       this.data_points.selectAll("circle")
         .transition(t)
-        .attr("visibility", "visible")
+        .attr("visibility", p => (p.Attack < sliderattack.property("value")) ? "hidden" : "visible")
         .attr("cx", p => this.getXpos(p, pointSize))
         .attr("cy", p => this.getYpos(p, pointSize))
         .attr("r", pointSize)
@@ -608,9 +617,6 @@ class Chart {
       this.data_points.selectAll("circle")
         .transition(t)
         .attr("visibility", "hidden")
-        .attr("cx", p => this.getXpos(p, pointSize))
-        .attr("cy", p => this.getYpos(p, pointSize))
-        .attr("r", pointSize)
       this.data_points.selectAll("image")
         .transition(t)
         .attr("visibility", "visible")
