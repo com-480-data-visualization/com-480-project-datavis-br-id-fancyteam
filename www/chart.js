@@ -201,6 +201,7 @@ class Chart {
       .attr("min", 180)
       .attr("max", 780)
       .attr("step", 1)
+      .attr("value", 180)
       .on("input", slided);
 
     var slider_hp = d3.select("#chart-container").append("p")
@@ -211,6 +212,7 @@ class Chart {
       .attr("min", 1)
       .attr("max", 255)
       .attr("step", 1)
+      .attr("value", 1)
       .on("input", slided);
 
     var slider_attack = d3.select("#chart-container").append("p")
@@ -221,6 +223,7 @@ class Chart {
       .attr("min", 5)
       .attr("max", 190)
       .attr("step", 1)
+      .attr("value", 5)
       .on("input", slided);
 
     var slider_defense = d3.select("#chart-container").append("p")
@@ -231,6 +234,7 @@ class Chart {
       .attr("min", 5)
       .attr("max", 230)
       .attr("step", 1)
+      .attr("value", 5)
       .on("input", slided);
 
     var slider_spatk = d3.select("#chart-container").append("p")
@@ -241,6 +245,7 @@ class Chart {
       .attr("min", 10)
       .attr("max", 194)
       .attr("step", 1)
+      .attr("value", 10)
       .on("input", slided);
 
     var slider_spdef = d3.select("#chart-container").append("p")
@@ -251,6 +256,7 @@ class Chart {
       .attr("min", 20)
       .attr("max", 230)
       .attr("step", 1)
+      .attr("value", 20)
       .on("input", slided);
 
     var slider_speed = d3.select("#chart-container").append("p")
@@ -261,6 +267,7 @@ class Chart {
       .attr("min", 5)
       .attr("max", 180)
       .attr("step", 1)
+      .attr("value", 5)
       .on("input", slided);
 
     var slider_generation = d3.select("#chart-container").append("p")
@@ -271,10 +278,11 @@ class Chart {
       .attr("min", 1)
       .attr("max", 6)
       .attr("step", 1)
+      .attr("value", 1)
       .on("input", slided);
 
     function slided(d) {
-      //console.log(d3.select(this).property("value"));
+      console.log(d3.select(this).property("value"));
     }
 
     var filterArea = d3.select("#chart-container") // this.svg.append("div") //
