@@ -3,8 +3,7 @@ class Chart {
   constructor(options) {
     this.width = options.width;
     this.height = options.height;
-    this.idleBrushDelay =
-    350; // milliseconds, delay to double click, otherwise the brush is triggered to zoom
+    this.idleBrushDelay = 350;  // milliseconds, delay to double click, otherwise the brush is triggered to zoom
 
     // The whole chart area, i.e. plot, axis, filters, ...
     this.svg = d3.select("#chart-container").append("svg")
@@ -238,12 +237,22 @@ class Chart {
       .append('option')
       .text(p => p)
       .attr("value", p => p)
+
+    // Tooltip tool creation
+    this.tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+    // Create the data_points
+    this.data_points = this.svg.append('g')
+      .attr('class', 'data_points')
+      .attr('clip-path', 'url(#clip)');
     
     // Finally, update the chart
     this.chart_update(this.x_field, this.y_field, this.color_field)
   }
   
-  /* Use to update the chart when for instance a label is changed. */
+  /* Used to update the chart when for instance a label is changed. */
   chart_update(x_field = columns[7], y_field = columns[6], color_field = columns[
     2]) {
     this.x_field = x_field;
@@ -256,7 +265,7 @@ class Chart {
     let maxYPoint = 0;
     let minYPoint = 1000;
 
-    // For each Pokémon, place a point according to its fields.
+    // Seek for min and max values.
     pokemons.forEach(pokemon => {
       for (let field in pokemon) {
         if (pokemon.hasOwnProperty(field) && field == x_field) {
@@ -307,16 +316,6 @@ class Chart {
         .style("text-anchor", "middle")
         .text(lbl);
     }
-
-    // Tooltip tool creation
-    this.tooltip = d3.select("body").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0);
-
-    // Create the data_points
-    this.data_points = this.svg.append('g')
-      .attr('class', 'data_points')
-      .attr('clip-path', 'url(#clip)');
       
     // Initialization of the Pkmn values
     this.init_pkmn();
@@ -440,7 +439,7 @@ class Chart {
       });
   }
 
-  // ???
+  // Offset function
   getXpos(p, pointSize) {
     if (pointSize <= 6) {
       return this.x(p[this.x_field])
@@ -449,7 +448,7 @@ class Chart {
     }
   }
 
-  // ???
+  // Offset function
   getYpos(p, pointSize) {
     if (pointSize <= 6) {
       return this.y(p[this.y_field])
@@ -459,59 +458,47 @@ class Chart {
   }
   
   /* Draw the points and the evolutions */
-  draw_pkmn_evols() {
+  draw_pkmn_evols() {  // Everything is in memory, not optimal.
     var t = this.svg.transition().duration(750);
     var pointSize = (this.x(1) - this.x(0)) / 2;
 
+    // Axis
     this.svg.select(".x_axis").transition(t).call(this.xAxis);
     this.svg.select(".y_axis").transition(t).call(this.yAxis);
-
-    if (pointSize <= 6) {
-      this.data_points.selectAll("image").attr("visibility", "hidden")
-      this.svg.selectAll("circle");
+    
+    // We have multiple sets of PNGs to use.
+    function sizeToPixel(pointSize) {
+      if(pointSize <= 16) return 32;
+      if(pointSize <= 32) return 120;
+      return 256;
+    }
+    
+    // Draw Pokémon
+    if(pointSize <= 5) {  // Use circles
+      this.data_points.selectAll("image")
+        .transition(t)
+        .attr("visibility", "hidden")
       this.data_points.selectAll("circle")
         .transition(t)
         .attr("visibility", "visible")
         .attr("cx", p => this.getXpos(p, pointSize))
         .attr("cy", p => this.getYpos(p, pointSize))
         .attr("r", pointSize)
-
-    } else if (pointSize <= 16) {
-      this.data_points.selectAll("circle").attr("visibility", "hidden")
-      this.svg.selectAll("image");
+    } else {  // Use images
+      this.data_points.selectAll("circle")
+        .transition(t)
+        .attr("visibility", "hidden")
       this.data_points.selectAll("image")
         .transition(t)
         .attr("visibility", "visible")
-        .attr("x", p => this.getXpos(p, pointSize))
-        .attr("y", p => this.getYpos(p, pointSize))
-        .attr("width", 4 * Math.round(pointSize))
-        .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => addressMake(p, 32))
-
-    } else if (pointSize <= 30) {
-      this.data_points.selectAll("circle").attr("visibility", "hidden")
-      this.svg.selectAll("image");
-      this.data_points.selectAll("image")
-        .transition(t)
-        .attr("visibility", "visible")
-        .attr("x", p => this.getXpos(p, pointSize))
-        .attr("y", p => this.getYpos(p, pointSize))
-        .attr("width", 4 * Math.round(pointSize))
-        .attr("height", 4 * Math.round(pointSize))
-        .attr("xlink:href", p => addressMake(p, 120))
-    } else {
-      this.data_points.selectAll("circle").attr("visibility", "hidden")
-      this.svg.selectAll("image");
-      this.data_points.selectAll("image")
-        .transition(t)
-        .attr("visibility", "visible")
-        .attr("x", p => this.getXpos(p, pointSize))
-        .attr("y", p => this.getYpos(p, pointSize))
-        .attr("width", Math.round(pointSize))
-        .attr("height", Math.round(pointSize))
-        .attr("xlink:href", p => addressMake(p, 256))
+        .attr("x", p => this.getXpos(p, 5 * pointSize))
+        .attr("y", p => this.getYpos(p, 5 * pointSize))
+        .attr("width", 5 * Math.round(pointSize))
+        .attr("height", 5 * Math.round(pointSize))
+        .attr("xlink:href", p => addressMake(p, sizeToPixel(pointSize)))
     }
 
+    // Draw evolutions
     this.links
       .transition(t)
       .attr("x1", d => {
