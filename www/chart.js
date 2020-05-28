@@ -41,7 +41,8 @@ class Chart {
           ].map(this.y.invert, this.y));
           this.svg.select(".brush").call(this.brush.move, null);
         }
-        this.draw();
+        // When the brush selection is done, draw the points and the evolutions
+        this.draw_pkmn_evols();
       });
     this.svg.append("g")
       .attr("class", "brush")
@@ -52,6 +53,7 @@ class Chart {
         .height - 5) + ")")
       .text('Click and drag above to zoom, double click to reset view');
 
+    // Reset the timeout for the brush
     function idled() {
       idleBrushTimeout = null;
     }
@@ -241,6 +243,7 @@ class Chart {
     this.chart_update(this.x_field, this.y_field, this.color_field)
   }
   
+  /* Use to update the chart when for instance a label is changed. */
   chart_update(x_field = columns[7], y_field = columns[6], color_field = columns[
     2]) {
     this.x_field = x_field;
@@ -305,7 +308,7 @@ class Chart {
         .text(lbl);
     }
 
-    // Tooltip
+    // Tooltip tool creation
     this.tooltip = d3.select("body").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
@@ -314,27 +317,45 @@ class Chart {
     this.data_points = this.svg.append('g')
       .attr('class', 'data_points')
       .attr('clip-path', 'url(#clip)');
+      
+    // Initialization of the Pkmn values
+    this.init_pkmn();
 
-    this.draw_init();
+    // Finally, draw the points and the evolutions
+    this.draw_pkmn_evols();
   }
 
-  draw_init() {
-
+  /* Prepare the Pokémon and evolutions drawing. Called each time the axis change. */
+  // We can prolly optimize that thing.
+  init_pkmn() {
+    // Points contains informations about Pokémon
     this.points = d3.range(pokemonCount).map(i => {
       return pokemons[i]
     });
 
-    // define tooltip for local usage (necessary)
+    /* Tooltip */
+    // Define a tooltip variable for local usage (necessary)(because js)
     var tooltip = this.tooltip
 
+    // Show tooltip
     function display_tooltip(d) {
-      tooltip.transition() // show tooltip
+      tooltip.transition()
         .duration(200)
         .style("opacity", .9);
-      tooltip.html(d.Name) // change text and position it close to mouse
+        
+      // Change text and position it close to mouse
+      tooltip.html(d.Name)
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
     }
+    
+    // Hide tooltip
+    function hide_tooltip() {
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 0)
+    }
+    /* End Tooltip */
 
     var pointSize = (this.x(1) - this.x(0)) / 2;
     
@@ -352,6 +373,7 @@ class Chart {
       .attr("source-pt", p => p.source)
       .attr("target-pt", p => p.target)
 
+    // Compulsory local variable for links.
     var links = this.links;
 
     // Add Pokémon' points
@@ -389,10 +411,7 @@ class Chart {
         hide_tooltip()
       });
 
-    // Add pokemons' images
-    function hide_tooltip() {
-      tooltip.transition().duration(200).style("opacity", 0)
-    }
+    // Add Pokémon' images
     const images = this.data_points.selectAll("image")
       .data(this.points)
       .enter()
@@ -419,11 +438,9 @@ class Chart {
         links.classed("hovered-over", false)
         images.classed("hovered-other", false)
       });
-
-
-    this.draw();
   }
 
+  // ???
   getXpos(p, pointSize) {
     if (pointSize <= 6) {
       return this.x(p[this.x_field])
@@ -432,6 +449,7 @@ class Chart {
     }
   }
 
+  // ???
   getYpos(p, pointSize) {
     if (pointSize <= 6) {
       return this.y(p[this.y_field])
@@ -440,7 +458,8 @@ class Chart {
     }
   }
   
-  draw() {
+  /* Draw the points and the evolutions */
+  draw_pkmn_evols() {
     var t = this.svg.transition().duration(750);
     var pointSize = (this.x(1) - this.x(0)) / 2;
 
@@ -449,8 +468,9 @@ class Chart {
 
     if (pointSize <= 6) {
       this.data_points.selectAll("image").attr("visibility", "hidden")
-      this.svg.selectAll("circle").transition(t);
+      this.svg.selectAll("circle");
       this.data_points.selectAll("circle")
+        .transition(t)
         .attr("visibility", "visible")
         .attr("cx", p => this.getXpos(p, pointSize))
         .attr("cy", p => this.getYpos(p, pointSize))
@@ -458,8 +478,9 @@ class Chart {
 
     } else if (pointSize <= 16) {
       this.data_points.selectAll("circle").attr("visibility", "hidden")
-      this.svg.selectAll("image").transition(t);
+      this.svg.selectAll("image");
       this.data_points.selectAll("image")
+        .transition(t)
         .attr("visibility", "visible")
         .attr("x", p => this.getXpos(p, pointSize))
         .attr("y", p => this.getYpos(p, pointSize))
@@ -469,8 +490,9 @@ class Chart {
 
     } else if (pointSize <= 30) {
       this.data_points.selectAll("circle").attr("visibility", "hidden")
-      this.svg.selectAll("image").transition(t);
+      this.svg.selectAll("image");
       this.data_points.selectAll("image")
+        .transition(t)
         .attr("visibility", "visible")
         .attr("x", p => this.getXpos(p, pointSize))
         .attr("y", p => this.getYpos(p, pointSize))
@@ -479,8 +501,9 @@ class Chart {
         .attr("xlink:href", p => addressMake(p, 120))
     } else {
       this.data_points.selectAll("circle").attr("visibility", "hidden")
-      this.svg.selectAll("image").transition(t);
+      this.svg.selectAll("image");
       this.data_points.selectAll("image")
+        .transition(t)
         .attr("visibility", "visible")
         .attr("x", p => this.getXpos(p, pointSize))
         .attr("y", p => this.getYpos(p, pointSize))
@@ -490,6 +513,7 @@ class Chart {
     }
 
     this.links
+      .transition(t)
       .attr("x1", d => {
         for (var i = 0; i < this.points.length; i++) {
           if (this.points[i].Id == d.source) {
