@@ -247,6 +247,21 @@ class Chart {
     this.data_points = this.svg.append('g')
       .attr('class', 'data_points')
       .attr('clip-path', 'url(#clip)');
+      
+    // Define links between evolutions (the lil' arrows).
+    this.links = this.data_points.selectAll("line")
+      .data(evolutions)
+      .enter().append("line")
+      .attr("class", "connector")
+      .style("stroke", p => {
+        return "#000";
+      })
+      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
+        .top + ")")
+      .attr("marker-end", "url(#end)") // arrow heads
+      .attr("source-pt", p => p.source)
+      .attr("target-pt", p => p.target)
+
     
     // Finally, update the chart
     this.chart_update(this.x_field, this.y_field, this.color_field)
@@ -358,20 +373,6 @@ class Chart {
 
     var pointSize = (this.x(1) - this.x(0)) / 2;
     
-    // Define links between evolutions (the lil' arrows).
-    this.links = this.data_points.selectAll("line")
-      .data(evolutions)
-      .enter().append("line")
-      .attr("class", "connector")
-      .style("stroke", p => {
-        return "#000";
-      })
-      .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
-        .top + ")")
-      .attr("marker-end", "url(#end)") // arrow heads
-      .attr("source-pt", p => p.source)
-      .attr("target-pt", p => p.target)
-
     // Compulsory local variable for links.
     var links = this.links;
 
