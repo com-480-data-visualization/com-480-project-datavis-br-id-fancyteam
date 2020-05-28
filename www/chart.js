@@ -211,8 +211,8 @@ class Chart {
     this.color_field = columns[2];  // Base value, Type_1
 
     // Filters stuff.
-    var slider_total = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_total = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("Total   ")
       .append("input")
       .attr("type", "range")
@@ -222,8 +222,8 @@ class Chart {
       .attr("value", 180)
       .on("input", slided);
 
-    var slider_hp = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_hp = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("HP   ")
       .append("input")
       .attr("type", "range")
@@ -233,8 +233,8 @@ class Chart {
       .attr("value", 1)
       .on("input", slided);
 
-    var slider_attack = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_attack = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("Attack   ")
       .append("input")
       .attr("type", "range")
@@ -244,8 +244,8 @@ class Chart {
       .attr("value", 5)
       .on("input", slided);
 
-    var slider_defense = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_defense = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("Defense   ")
       .append("input")
       .attr("type", "range")
@@ -255,8 +255,8 @@ class Chart {
       .attr("value", 5)
       .on("input", slided);
 
-    var slider_spatk = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_spatk = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("Sp_Atk   ")
       .append("input")
       .attr("type", "range")
@@ -266,8 +266,8 @@ class Chart {
       .attr("value", 10)
       .on("input", slided);
 
-    var slider_spdef = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_spdef = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("Sp_Def   ")
       .append("input")
       .attr("type", "range")
@@ -277,8 +277,8 @@ class Chart {
       .attr("value", 20)
       .on("input", slided);
 
-    var slider_speed = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_speed = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("Speed   ")
       .append("input")
       .attr("type", "range")
@@ -288,8 +288,8 @@ class Chart {
       .attr("value", 5)
       .on("input", slided);
 
-    var slider_generation = d3.select("#chart-container").append("p")
-      .attr("align", "right")
+    var slider_generation = d3.select("#filters-container").append("p")
+      .attr("align", "left")
       .text("Generation   ")
       .append("input")
       .attr("type", "range")
@@ -303,14 +303,14 @@ class Chart {
       console.log(d3.select(this).property("value"));
     }
 
-    var filterArea = d3.select("#chart-container") // this.svg.append("div") //
+    var filterArea = d3.select("#filters-container") // this.svg.append("div") //
     var filters = filterArea.selectAll("filter")
       .data(columns.filter(c => {
         return pokemons[0][c] != parseFloat(pokemons[0][c])
       }))
       .enter()
       .append("div")
-      .attr("align", "right")
+      .attr("align", "left")
     var filter_labels = filters.append("text")
       .attr("class", "filter_label")
       .text(t => t)
