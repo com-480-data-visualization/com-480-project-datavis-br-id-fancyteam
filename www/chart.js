@@ -90,7 +90,7 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin
         .top + plot_height) + ")")
       .call(this.xAxis);
-    
+
     // Corresponding label
     this.svg.append("text")
       .attr("id", "xlabel")
@@ -100,6 +100,8 @@ class Chart {
 
     // Create the dropdown for the X axis
     this.xAxisButton = d3.select("#chart-container")
+      .append("div")
+      .text("x Axis : ")
       .append('select')
       .attr("id", "xaxisselect")
       .attr("xAxis_label", "xAxis_label")
@@ -140,7 +142,7 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
         .top + ")")
       .call(this.yAxis);
-    
+
     // Corresponding label
     this.svg.append("text")
       .attr("id", "ylabel")
@@ -150,6 +152,8 @@ class Chart {
 
     // Create the dropdown for the Y axis
     this.yAxisButton = d3.select("#chart-container")
+      .append("div")
+      .text("y Axis : ")
       .append('select')
       .attr("id", "yaxisselect")
       .attr("yAxis_label", "yAxis_label")
