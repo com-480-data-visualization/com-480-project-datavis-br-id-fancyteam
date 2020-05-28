@@ -12,20 +12,19 @@
 
 **10% of the final grade**
 
-[Available here](./milestone-1.md).
+[Available here](./milestones-reports/milestone1).
 
 ## Milestone 2 (Friday 1st May, 5pm)
 
 **10% of the final grade**
 
-[Available here](./report/milestone2.pdf).
+[Available here](./milestones-reports/milestone2).
 
 ## Milestone 3 (Thursday 28th May, 5pm)
 
 **80% of the final grade**
 
-### Process book
-The process book is [available here](./milestones-report/milestone3/milestone3.pdf).
+[Available here](./milestones-reports/milestone3).
 
 ### How to install
 Simply put the content of the [www](./www/) folder anywhere in a thing that can be used as a web server. Wan' have a quick look? Try `cd www/` then `python3 -m http.server`, and visit [http://localhost:8000/](http://localhost:8000) in your favorite browser! Otherwise, you can simply open the [index.html](./www/index.html) in your browser.
