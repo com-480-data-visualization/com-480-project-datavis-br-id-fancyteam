@@ -90,6 +90,13 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + (plot_margin
         .top + plot_height) + ")")
       .call(this.xAxis);
+    
+    // Corresponding label
+    this.svg.append("text")
+      .attr("id", "xlabel")
+      .attr("transform", "translate(" + (plot_width + plot_margin.left + 15)
+        + " ," + (plot_height + plot_margin.top + 5) + ")")
+      .text(columns[7]);
 
     // Create the dropdown for the X axis
     this.xAxisButton = d3.select("#chart-container")
@@ -113,8 +120,8 @@ class Chart {
     // Update on X axis dropdown
     function onChangeXAxis() {
       var selectValue = d3.select('#xaxisselect').property("value");
-      cha.chart_update(selectValue, cha.y_field, cha.color_field)
-      console.log(columns);
+      cha.chart_update(selectValue, cha.y_field, cha.color_field);
+      d3.select(xlabel).text(selectValue);
     }
 
     // X top axis (just the line)
@@ -133,6 +140,13 @@ class Chart {
       .attr("transform", "translate(" + plot_margin.left + "," + plot_margin
         .top + ")")
       .call(this.yAxis);
+    
+    // Corresponding label
+    this.svg.append("text")
+      .attr("id", "ylabel")
+      .attr("transform", "translate(" + (plot_margin.left - 10)
+        + " ," + (plot_margin.top - 15) + ")")
+      .text(columns[6]);
 
     // Create the dropdown for the Y axis
     this.yAxisButton = d3.select("#chart-container")
@@ -156,7 +170,8 @@ class Chart {
     // Update on Y axis dropdown
     function onChangeYAxis() {
       var selectValue = d3.select('#yaxisselect').property("value");
-      cha.chart_update(cha.x_field, selectValue, cha.color_field)
+      cha.chart_update(cha.x_field, selectValue, cha.color_field);
+      d3.select(ylabel).text(selectValue);
     }
 
     // Y right axis (just the line)
