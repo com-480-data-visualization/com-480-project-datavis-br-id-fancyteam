@@ -29,7 +29,7 @@
 
 </head>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="50" onLoad="scrollTo('picker')">
+<body data-spy="scroll" data-target=".navbar" data-offset="50" /*onLoad="scrollTo('picker')" */>
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg fixed-top navbar-custom" id="navbar">
@@ -147,11 +147,32 @@
       </div>
     </div>
   </div>
-
   <div class="modal" id="tuto5" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Tutorial V - The End</h5>
+        <h5 class="modal-title" id="modalLabel">Tutorial V - Filters</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        The current view is bulky, isn't it? That's because we display more than 300 evolutions and 700 Pokémons. On the right,
+        you can select filters to reduce the number displayed. For example, try to only select the Legendary Pokémons.
+        <br>
+        <b>Note: </b> The filters are still in Beta, and may not work. Please excuse us for the inconvenience.
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto4">Previous</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto6">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="tuto6" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Tutorial VI - The End</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
@@ -162,7 +183,7 @@
         <br>
         Thanks for visiting us. We hope you have fun!
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto4">Previous</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tuto5">Previous</button>
           <button type="button" class="btn btn-primary" data-dismiss="modal">Finish</button>
         </div>
       </div>
