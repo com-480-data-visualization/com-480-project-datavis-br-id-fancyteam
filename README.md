@@ -28,7 +28,9 @@
 The process book is [available here](./milestones-report/milestone3/milestone3.pdf).
 
 ### How to install
-Simply put the content of the [www](./www/) folder anywhere in a thing that can be used as a web server. Wan' have a quick look? Try `cd www/` then `python3 -m http.server`, and visit [http://localhost:8000/](http://localhost:8000) in your favorite browser!
+Simply put the content of the [www](./www/) folder anywhere in a thing that can be used as a web server. Wan' have a quick look? Try `cd www/` then `python3 -m http.server`, and visit [http://localhost:8000/](http://localhost:8000) in your favorite browser! Otherwise, you can simply open the [index.html](./www/index.html) in your browser.
+
+Note that it has been tested under a recent version of Mozilla Firefox and some slight glitches may appear under any other browsers.
 
 ### How to use
 Simply use your mouse to select an area to zoom in, double-click anywhere to zoom out, and click on a specific Pokémon to gather more informations on it.
